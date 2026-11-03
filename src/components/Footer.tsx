@@ -103,3 +103,4 @@ export const Footer: React.FC<FooterProps> = ({ onOpenTerminal }) => {
     </footer>
   );
 };
+

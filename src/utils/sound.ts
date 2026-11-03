@@ -107,3 +107,4 @@ export const playSound = (type: 'hover' | 'click' | 'success' | 'terminal' | 'mo
     // Graceful fallback if Web Audio is blocked by browser policies
   }
 };
+

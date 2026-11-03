@@ -92,3 +92,4 @@ export const MatrixRain: React.FC<MatrixRainProps> = ({ isActive, onClose }) => 
     </div>
   );
 };
+

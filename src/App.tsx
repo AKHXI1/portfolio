@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { BackgroundMesh } from './components/BackgroundMesh';
+import { CursorSpotlight } from './components/CursorSpotlight';
 import { Navbar } from './components/Navbar';
 import { Hero } from './components/Hero';
 import { InteractiveSimulator } from './components/InteractiveSimulator';
@@ -49,7 +50,10 @@ export const App: React.FC = () => {
   };
 
   return (
-    <div className="relative min-h-screen bg-[#090a0f] text-slate-100 overflow-x-hidden selection:bg-sky-500/30 selection:text-sky-200">
+    <div className="relative min-h-screen bg-[#05060a] text-slate-100 overflow-x-hidden selection:bg-cyan-500/30 selection:text-cyan-200">
+      {/* Ambient dynamic cursor spotlight */}
+      <CursorSpotlight />
+
       {/* Dynamic Canvas Particles & Ambient Gradients */}
       <BackgroundMesh />
 
@@ -66,7 +70,7 @@ export const App: React.FC = () => {
           onExploreProjects={handleExploreProjects}
         />
         
-        {/* Interactive Lab (Featured right below Hero for maximum engagement!) */}
+        {/* Interactive Lab */}
         <InteractiveSimulator />
 
         {/* Project Showcase */}
