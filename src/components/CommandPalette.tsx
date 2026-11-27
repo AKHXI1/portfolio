@@ -31,6 +31,36 @@ export const CommandPalette: React.FC<CommandPaletteProps> = ({
 
   const items = [
     {
+      id: 'about',
+      label: 'About Akhil Sabu & SJCET Background',
+      category: 'Navigation',
+      icon: Sparkles,
+      action: () => {
+        window.location.hash = '#about';
+        onClose();
+      }
+    },
+    {
+      id: 'resume',
+      label: 'Download Akhil\'s Resume (PDF)',
+      category: 'Documents',
+      icon: Mail,
+      action: () => {
+        window.open('/resume.pdf', '_blank');
+        onClose();
+      }
+    },
+    {
+      id: 'whatsapp',
+      label: 'Direct WhatsApp Transmission (+91 8138902941)',
+      category: 'Links',
+      icon: Mail,
+      action: () => {
+        window.open('https://wa.me/8138902941', '_blank');
+        onClose();
+      }
+    },
+    {
       id: 'proj',
       label: 'Explore Featured Projects',
       category: 'Navigation',

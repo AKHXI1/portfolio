@@ -30,6 +30,7 @@ export const Navbar: React.FC<NavbarProps> = ({ onOpenTerminal, onOpenCommandPal
   };
 
   const navLinks = [
+    { name: 'About', href: '#about' },
     { name: 'Projects', href: '#projects' },
     { name: 'Live Lab', href: '#simulator' },
     { name: 'Skills', href: '#skills' },

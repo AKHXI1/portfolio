@@ -23,52 +23,68 @@ export const Footer: React.FC<FooterProps> = ({ onOpenTerminal }) => {
             <div className="w-8 h-8 rounded-lg bg-gradient-to-tr from-sky-500 to-purple-600 flex items-center justify-center font-mono font-bold text-white text-sm shadow-md shadow-sky-500/20">
               A
             </div>
-            <span className="font-bold text-base text-white">Akhil</span>
+            <span className="font-bold text-base text-white">Akhil Sabu</span>
             <span className="font-mono text-[10px] text-slate-400 px-1.5 py-0.5 rounded bg-white/5 border border-white/10">
               {PERSONAL_INFO.handle}
             </span>
           </div>
           <p className="text-xs text-slate-400 font-normal max-w-sm">
-            Bridging engineering rigor with intuitive user experiences across AI systems, mobile applications, and interactive 3D.
+            {PERSONAL_INFO.institution} • {PERSONAL_INFO.degree}
           </p>
         </div>
 
         {/* Quick Footer Links */}
         <div className="flex flex-wrap items-center justify-center gap-6 text-xs text-slate-400 font-medium">
           <a
+            href="#about"
+            onClick={() => playSound('hover')}
+            className="hover:text-cyan-300 transition-colors"
+          >
+            About
+          </a>
+          <a
             href="#projects"
             onClick={() => playSound('hover')}
-            className="hover:text-sky-300 transition-colors"
+            className="hover:text-cyan-300 transition-colors"
           >
             Projects
           </a>
           <a
             href="#simulator"
             onClick={() => playSound('hover')}
-            className="hover:text-sky-300 transition-colors"
+            className="hover:text-cyan-300 transition-colors"
           >
             Live Lab
           </a>
           <a
             href="#skills"
             onClick={() => playSound('hover')}
-            className="hover:text-sky-300 transition-colors"
+            className="hover:text-cyan-300 transition-colors"
           >
             Skills
           </a>
           <a
             href="#journey"
             onClick={() => playSound('hover')}
-            className="hover:text-sky-300 transition-colors"
+            className="hover:text-cyan-300 transition-colors"
           >
-            Journey
+            Timeline
           </a>
           <a
             href="#contact"
             onClick={() => playSound('hover')}
-            className="hover:text-sky-300 transition-colors"
+            className="hover:text-cyan-300 transition-colors"
           >
             Contact
+          </a>
+          <a
+            href={PERSONAL_INFO.whatsapp}
+            target="_blank"
+            rel="noreferrer"
+            onClick={() => playSound('click')}
+            className="text-emerald-400 hover:text-emerald-300 transition-colors"
+          >
+            WhatsApp
           </a>
           <button
             onClick={() => {

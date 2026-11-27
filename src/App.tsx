@@ -3,6 +3,7 @@ import { BackgroundMesh } from './components/BackgroundMesh';
 import { CursorSpotlight } from './components/CursorSpotlight';
 import { Navbar } from './components/Navbar';
 import { Hero } from './components/Hero';
+import { AboutSection } from './components/AboutSection';
 import { InteractiveSimulator } from './components/InteractiveSimulator';
 import { ProjectShowcase } from './components/ProjectShowcase';
 import { SkillsArsenal } from './components/SkillsArsenal';
@@ -69,7 +70,10 @@ export const App: React.FC = () => {
           onOpenTerminal={() => setTerminalOpen(true)}
           onExploreProjects={handleExploreProjects}
         />
-        
+
+        {/* Identity & Academic Foundation */}
+        <AboutSection />
+
         {/* Interactive Lab */}
         <InteractiveSimulator />
 

@@ -168,11 +168,49 @@ export const ContactSection: React.FC = () => {
             {/* Social Network Badges */}
             <div className="grid grid-cols-2 gap-3">
               <a
+                href={PERSONAL_INFO.whatsapp}
+                target="_blank"
+                rel="noreferrer"
+                onClick={() => playSound('click')}
+                className="spotlight-card p-4 sm:p-5 bg-[#080b14] border border-white/10 hover:border-emerald-500/40 transition-all flex items-center justify-between group shadow-glass-card"
+              >
+                <div className="flex items-center gap-3">
+                  <div className="w-8 h-8 rounded-xl bg-emerald-500/15 border border-emerald-500/30 text-emerald-400 flex items-center justify-center font-bold text-xs">
+                    WA
+                  </div>
+                  <div>
+                    <div className="text-xs font-bold text-white">WhatsApp</div>
+                    <div className="text-[10px] font-mono text-emerald-400">Direct Chat</div>
+                  </div>
+                </div>
+                <ArrowUpRight className="w-4 h-4 text-slate-600 group-hover:text-emerald-400 transition-transform group-hover:translate-x-0.5" />
+              </a>
+
+              <a
+                href={PERSONAL_INFO.twitter}
+                target="_blank"
+                rel="noreferrer"
+                onClick={() => playSound('click')}
+                className="spotlight-card p-4 sm:p-5 bg-[#080b14] border border-white/10 hover:border-sky-500/40 transition-all flex items-center justify-between group shadow-glass-card"
+              >
+                <div className="flex items-center gap-3">
+                  <div className="w-8 h-8 rounded-xl bg-sky-500/15 border border-sky-500/30 text-sky-400 flex items-center justify-center font-bold text-xs">
+                    𝕏
+                  </div>
+                  <div>
+                    <div className="text-xs font-bold text-white">Twitter / 𝕏</div>
+                    <div className="text-[10px] font-mono text-slate-500">@Akhxi1S</div>
+                  </div>
+                </div>
+                <ArrowUpRight className="w-4 h-4 text-slate-600 group-hover:text-sky-400 transition-transform group-hover:translate-x-0.5" />
+              </a>
+
+              <a
                 href={PERSONAL_INFO.github}
                 target="_blank"
                 rel="noreferrer"
                 onClick={() => playSound('click')}
-                className="spotlight-card p-5 bg-[#080b14] border border-white/10 hover:border-sky-500/40 transition-all flex items-center justify-between group shadow-glass-card"
+                className="spotlight-card p-4 sm:p-5 bg-[#080b14] border border-white/10 hover:border-sky-500/40 transition-all flex items-center justify-between group shadow-glass-card"
               >
                 <div className="flex items-center gap-3">
                   <GithubIcon className="w-5 h-5 text-slate-300 group-hover:text-white" />
@@ -189,7 +227,7 @@ export const ContactSection: React.FC = () => {
                 target="_blank"
                 rel="noreferrer"
                 onClick={() => playSound('click')}
-                className="spotlight-card p-5 bg-[#080b14] border border-white/10 hover:border-purple-500/40 transition-all flex items-center justify-between group shadow-glass-card"
+                className="spotlight-card p-4 sm:p-5 bg-[#080b14] border border-white/10 hover:border-purple-500/40 transition-all flex items-center justify-between group shadow-glass-card"
               >
                 <div className="flex items-center gap-3">
                   <LinkedinIcon className="w-5 h-5 text-purple-400 group-hover:text-purple-300" />

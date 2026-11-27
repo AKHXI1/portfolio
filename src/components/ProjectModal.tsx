@@ -128,6 +128,18 @@ export const ProjectModal: React.FC<ProjectModalProps> = ({ project, onClose }) 
         {/* Footer Actions */}
         <div className="pt-4 border-t border-white/10 flex flex-wrap items-center justify-between gap-3">
           <div className="flex items-center gap-3">
+            {project.liveUrl && (
+              <a
+                href={project.liveUrl}
+                target="_blank"
+                rel="noreferrer"
+                onClick={() => playSound('click')}
+                className="inline-flex items-center gap-2 px-4 py-2 rounded-xl bg-cyan-500/20 hover:bg-cyan-500/30 text-xs font-semibold text-cyan-300 border border-cyan-500/40 transition-all"
+              >
+                <span>Open Live Project</span>
+                <ExternalLink className="w-3 h-3" />
+              </a>
+            )}
             {project.githubUrl && (
               <a
                 href={project.githubUrl}

@@ -95,7 +95,7 @@ export const Hero: React.FC<HeroProps> = ({ onOpenTerminal, onExploreProjects })
         {/* Hero Headline with Syne Luxury Display Font */}
         <div className="space-y-3 mb-8">
           <div className="text-xs sm:text-sm font-mono tracking-[0.25em] uppercase text-sky-400 font-semibold">
-            Hello, World • I am Akhil (AKHXI1)
+            Hello, World • I am Akhil Sabu (AKHXI1)
           </div>
           <h1 className="text-4xl sm:text-6xl md:text-7xl lg:text-8xl font-display font-extrabold tracking-tight text-white leading-[1.05]">
             Engineering <span className="text-gradient">Intelligent</span> Realities

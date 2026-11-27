@@ -1,22 +1,30 @@
 import { Project, SkillCategory, TimelineItem } from '../types';
 
 export const PERSONAL_INFO = {
-  name: 'Akhil',
+  name: 'Akhil Sabu',
   handle: 'AKHXI1',
-  role: 'Creative Developer & Software Engineer',
-  tagline: 'Bridging engineering rigor with intuitive user experiences across AI systems, mobile applications, and interactive 3D.',
-  bio: 'I am a multidisciplinary software engineer and builder passionate about pushing the boundaries of human-computer interaction. From building AI-driven browser extensions that decode music lyrics in real-time with Google Gemini, to developing accessibility solutions like SignSync for the deaf community and crafting 3D stealth worlds in Unity, I thrive on turning complex technical challenges into engaging, high-impact products.',
-  status: 'Open to high-impact software roles & innovative collaborations',
-  location: 'India',
+  role: 'Software Engineer & Creative Frontend Developer',
+  institution: "St. Joseph's College of Engineering & Technology, Palai",
+  degree: 'B.Tech in Computer Science & Engineering',
+  location: 'Kerala, India',
   timezone: 'IST (UTC+05:30)',
-  email: 'akhil.dev.work@gmail.com', // user can update anytime
+  email: 'akhil.dev.work@gmail.com',
+  whatsapp: 'https://wa.me/8138902941',
+  whatsappDisplay: '+91 8138902941',
+  twitter: 'https://twitter.com/Akhxi1S',
+  facebook: 'https://www.facebook.com/people/Akhil-Sabu/pfbid02xdDFWcpvJtYYC2MymYubTP3CgEwbF8SJPLWbTHEKnytrdgr7JCJw3ywP2gS9BEuTl/',
   github: 'https://github.com/AKHXI1',
   linkedin: 'https://linkedin.com/in/akhil-developer',
+  resumeUrl: '/resume.pdf',
+  avatarUrl: '/man.png',
+  status: 'Open to high-impact software roles & innovative collaborations',
+  tagline: 'Bridging engineering rigor with intuitive user experiences across AI systems, mobile applications, and interactive 3D.',
+  bio: "Passionate software engineer and dedicated frontend developer based in Kerala, India, currently pursuing B.Tech in Computer Science at St. Joseph's College of Engineering and Technology, Palai, Kottayam. Deeply motivated to create engaging, user-friendly applications that solve real-world problems and leave a lasting positive impact through technology, collaboration, and continuous learning.",
   stats: [
-    { label: 'Core Projects Built', value: '6+' },
-    { label: 'Technologies & Stacks', value: '12+' },
-    { label: 'Platforms Engineered', value: 'Web / Mobile / Extension / 3D' },
-    { label: 'Code Quality & Craft', value: '100%' },
+    { label: 'Core Projects Engineered', value: '8+' },
+    { label: 'Technologies & Stacks', value: '14+' },
+    { label: 'Platforms Deployed', value: 'Web / Mobile / Extension / 3D' },
+    { label: 'Code Quality & Passion', value: '100%' },
   ]
 };
 
@@ -129,6 +137,53 @@ export const PROJECTS: Project[] = [
     ]
   },
   {
+    id: 'built-myweb',
+    title: 'Built.myweb Portal',
+    tagline: 'Responsive Multi-Device Web Application & Interface',
+    description: 'A responsive frontend web project exploring modern responsive breakpoints, fluid typography, modular CSS, and accessible navigation.',
+    longDescription: 'Built.myweb was created as a cornerstone frontend engineering project at SJCET Palai. It showcases thorough mastery of responsive layouts across desktop, tablet, and mobile displays, incorporating structured semantic HTML5, utility grid systems, and smooth CSS animations.',
+    category: 'fullstack',
+    tags: ['Bootstrap', 'HTML5', 'CSS3', 'Responsive Design', 'JavaScript'],
+    metrics: 'Responsive frontend architecture with fluid grid',
+    featured: false,
+    liveUrl: 'https://akhxi1.github.io/learning-fest/bootstrap/task6/index.html',
+    demoType: 'generic',
+    imageGradient: 'from-blue-600/30 via-cyan-600/20 to-slate-900',
+    highlights: [
+      'Pixel-perfect responsive layout adapting seamlessly from 320px mobile screens to ultra-wide desktop monitors.',
+      'Custom Bootstrap components and CSS transitions delivering fluid interactions.',
+      'Cross-browser tested and optimized for speed with semantic structure.'
+    ],
+    architecture: [
+      'HTML5 semantic document structure',
+      'CSS3 Media Query breakpoints & Flexbox/Grid layouts',
+      'Lightweight JavaScript DOM interactivity'
+    ]
+  },
+  {
+    id: 'photoshop-creative-suite',
+    title: 'Adobe Photoshop Design & Branding Works',
+    tagline: 'Digital Art, Graphic Design & Creative Visual Identity Portfolio',
+    description: 'A curated visual design portfolio spanning creative branding, typography compositions, photo manipulation, and poster artwork in Adobe Photoshop.',
+    longDescription: 'Demonstrating visual design acumen, this collection features creative projects designed in Adobe Photoshop. From brand identities, marketing collateral, and UI mockups to atmospheric digital manipulations, it reflects an eye for color harmony, visual rhythm, and graphic precision.',
+    category: 'fullstack',
+    tags: ['Adobe Photoshop', 'Graphic Design', 'UI/UX Mockups', 'Visual Branding', 'Color Theory'],
+    metrics: 'Curated design portfolio on Google Drive',
+    featured: false,
+    liveUrl: 'https://drive.google.com/drive/folders/1NEGsmJufG8RTOw-tJ6gIzeoJKDn_nq4N?usp=drive_link',
+    demoType: 'generic',
+    imageGradient: 'from-pink-600/30 via-rose-600/20 to-purple-950',
+    highlights: [
+      'Original poster concepts, social assets, and digital artwork with multi-layered blending and color grading.',
+      'Vector and raster manipulation, masking, and typography hierarchies.',
+      'Complete creative portfolio available for preview on Google Drive.'
+    ],
+    architecture: [
+      'Adobe Photoshop CC digital design suite',
+      'Layer comps, non-destructive adjustment masks, and custom typography'
+    ]
+  },
+  {
     id: 'family-tree-engine',
     title: 'Kinship: Interactive Family Tree Engine',
     tagline: 'Dynamic Hierarchical Graph & Lineage Visualization',
@@ -183,11 +238,12 @@ export const SKILL_CATEGORIES: SkillCategory[] = [
     name: 'Languages & Core Systems',
     icon: 'Terminal',
     skills: [
-      { name: 'Python', level: 92, category: 'Backend & AI', description: 'Django, REST APIs, Automation scripts, data processing', tag: 'Primary' },
+      { name: 'Python', level: 92, category: 'Backend & Scripting', description: 'Django, REST APIs, Automation scripts, data processing', tag: 'Primary' },
       { name: 'TypeScript & JavaScript', level: 90, category: 'Web & Extensions', description: 'ESNext, React, Node.js, Chrome MV3 extensions, DOM manipulation', tag: 'Primary' },
       { name: 'Dart', level: 86, category: 'Mobile', description: 'Flutter SDK, reactive state management, asynchronous streams', tag: 'Primary' },
+      { name: 'Java', level: 82, category: 'Object-Oriented', description: 'Core Java, OOP principles, multi-platform applications', tag: 'Legacy Root' },
+      { name: 'C Programming', level: 80, category: 'Systems', description: 'Memory management, pointers, fundamental data structures & algorithms' },
       { name: 'C#', level: 80, category: 'Game Dev', description: 'Unity gameplay mechanics, state machines, math & vectors' },
-      { name: 'C Programming', level: 78, category: 'Systems', description: 'Memory management, pointers, fundamental data structures & algorithms' },
       { name: 'SQL', level: 84, category: 'Database', description: 'MySQL, schema design, relations, query optimization' }
     ]
   },
@@ -199,7 +255,7 @@ export const SKILL_CATEGORIES: SkillCategory[] = [
       { name: 'Flutter SDK', level: 88, category: 'Mobile', description: 'Cross-platform mobile apps for Android & iOS, custom animations', tag: 'Featured' },
       { name: 'Unity Engine', level: 82, category: 'Game Dev', description: 'Universal Render Pipeline, NavMesh AI, Physics, Particle systems' },
       { name: 'Django', level: 85, category: 'Backend', description: 'MVC architecture, ORM, authentication, admin, REST framework' },
-      { name: 'Tailwind CSS', level: 94, category: 'Styling', description: 'Glassmorphism, responsive grids, custom theme animations' }
+      { name: 'Tailwind CSS & Bootstrap', level: 94, category: 'Styling', description: 'Glassmorphism, responsive grids, custom theme animations' }
     ]
   },
   {
@@ -213,13 +269,13 @@ export const SKILL_CATEGORIES: SkillCategory[] = [
     ]
   },
   {
-    name: 'Tools, 3D & Craft',
+    name: 'Design, 3D & Craft',
     icon: 'Palette',
     skills: [
+      { name: 'Adobe Photoshop', level: 88, category: 'Graphic Design', description: 'Photo editing, visual identity, layer blending, poster design', tag: 'Creative Root' },
       { name: 'Blender 3D', level: 76, category: '3D Modeling', description: 'Hard surface modeling, low-poly game assets, UV unwrapping' },
       { name: 'Git & GitHub', level: 88, category: 'DevOps', description: 'Version control, branch workflows, releases, repository management' },
-      { name: 'VS Code & Android Studio', level: 92, category: 'Tooling', description: 'Advanced debugging, profilers, linting and formatting' },
-      { name: 'UI/UX & Prototyping', level: 85, category: 'Design', description: 'Figma wireframing, cyber aesthetics, micro-interactions' }
+      { name: 'UI/UX & Prototyping', level: 86, category: 'Design', description: 'Figma wireframing, cyber aesthetics, micro-interactions' }
     ]
   }
 ];
@@ -227,9 +283,9 @@ export const SKILL_CATEGORIES: SkillCategory[] = [
 export const TIMELINE: TimelineItem[] = [
   {
     year: '2026',
-    title: 'VerseLens & AI Innovation',
-    role: 'Creator & Extension Architect',
-    organization: 'Independent Project',
+    title: 'VerseLens AI & Extension Architecture',
+    role: 'Creator & Lead Architect',
+    organization: 'Independent Innovation',
     description: 'Engineered VerseLens, uniting Spotify playback telemetry with Google Gemini AI to bring live poetic translations, transliteration, and cultural insights to millions of listeners worldwide.',
     technologies: ['Gemini AI', 'Chrome MV3', 'JavaScript', 'LRCLIB', 'Spicetify'],
     category: 'ai'
@@ -262,62 +318,60 @@ export const TIMELINE: TimelineItem[] = [
     category: 'code'
   },
   {
-    year: '2024',
-    title: 'Foundational Systems & Algorithms',
-    role: 'Software Exploration',
-    organization: 'Foundations',
-    description: 'Mastered low-level systems programming in C, memory management, pointers, and graph algorithms (paving the way for projects like Kinship Family Tree visualizer and custom compilers).',
-    technologies: ['C Programming', 'Data Structures', 'Graph Algorithms', 'Memory Management'],
+    year: '2023 - 2024',
+    title: 'Foundations at SJCET Palai & Creative Design',
+    role: 'B.Tech Computer Science Scholar',
+    organization: "St. Joseph's College of Engineering & Technology, Palai",
+    description: 'Mastered low-level systems programming in C, Java OOP principles, data structures, and algorithms. Built early responsive web apps (Built.myweb) and authored creative design suites in Adobe Photoshop.',
+    technologies: ['C', 'Java', 'Python', 'Bootstrap', 'Adobe Photoshop', 'Data Structures'],
     category: 'code'
   }
 ];
 
 export const TERMINAL_COMMANDS: { [key: string]: string | (() => string) } = {
   help: `Available commands:
-  • about        - Summary of who Akhil is
-  • projects     - List of core engineering projects
+  • about        - Complete profile of Akhil Sabu
+  • college      - Academic background at SJCET Palai
+  • projects     - All 8 engineering & creative works
   • skills       - Technical capabilities & stack
-  • verselens    - Deep dive into the VerseLens AI Spotify project
-  • signsync     - Overview of SignSync accessibility mobile app
-  • contact      - How to reach Akhil for work or collaboration
-  • social       - GitHub, LinkedIn & profile links
-  • confetti     - Launch celebratory confetti animation!
-  • matrix       - Toggle cyber green matrix rain effect
+  • verselens    - Deep dive into VerseLens AI Spotify project
+  • signsync     - SignSync mobile accessibility overview
+  • whatsapp     - Direct WhatsApp transmission link
+  • resume       - Direct download link for Akhil's CV
+  • contact      - Reach Akhil via WhatsApp, Email & Socials
+  • confetti     - Launch celebratory fireworks!
+  • matrix       - Activate cyber green matrix rain
   • sudo hire    - Trigger instant hiring sequence
   • clear        - Clear the terminal screen`,
-  about: `Akhil (AKHXI1)
-Creative Developer & Multidisciplinary Software Engineer.
-Passionate about human-centric software, combining artificial intelligence (Gemini),
-mobile apps (Flutter), game development (Unity & Blender), and browser extensions.`,
-  projects: `Core Projects:
+  about: `Akhil Sabu (AKHXI1)
+Creative Technologist, Software Engineer & Frontend Developer from Kerala, India.
+B.Tech Computer Science at St. Joseph's College of Engineering & Technology, Palai.
+Specializing in AI extensions (Gemini), Flutter mobile apps, Unity 3D, and full-stack architectures.`,
+  college: `Education:
+• Institution: St. Joseph's College of Engineering & Technology (SJCET), Palai, Kottayam, Kerala
+• Degree: B.Tech in Computer Science & Engineering
+• Focus: Software Engineering, Data Structures, Modern Web Systems & Human-Computer Interaction`,
+  whatsapp: `WhatsApp Direct: https://wa.me/8138902941 (Phone: +91 8138902941)`,
+  resume: `Download Resume: /resume.pdf (Click 'Download CV' on the About section or open directly)`,
+  projects: `Engineered Works:
 1. VerseLens       - Spotify AI Lyrics & Meaning Translator (Chrome MV3 + Gemini AI)
 2. SignSync        - Inclusive Sign Language & Accessibility Hub (Flutter / Dart)
 3. Midnight Kallan - 3D Stealth Action Adventure (Unity & Blender)
 4. Altos Suite     - Full-Stack Django + MySQL Enterprise Application
-5. Kinship Engine  - Dynamic Family Tree Lineage Visualizer
-Type '[project-name]' for specific project details.`,
-  verselens: `[PROJECT: VerseLens]
-• Category: AI-Powered Browser Extension & Spicetify Desktop Mod
-• Stack: Chrome MV3, Google Gemini 1.5 Flash, LRCLIB API, JavaScript
-• Purpose: Solves foreign language barrier in music by showing real-time translated lyrics,
-  Romanized phonetics, and poetic explanations beneath Spotify songs.`,
-  signsync: `[PROJECT: SignSync]
-• Category: Cross-Platform Mobile Accessibility Suite
-• Stack: Flutter, Dart, State Management, Computer Vision
-• Purpose: Bridges the communication divide with real-time Sign-to-Text and Text-to-Sign screens.`,
+5. Built.myweb     - Responsive Web Interface (Bootstrap & CSS3)
+6. Photoshop Suite - Branding & Graphic Design Collection
+7. Kinship Engine  - Dynamic Family Tree Lineage Visualizer
+8. OmniScript      - High-Speed Phonetic Transliterator`,
   skills: `Technical Arsenal:
-• Languages: Python, TypeScript, Dart, C#, C, JavaScript, SQL
-• Frameworks: Flutter, React, Unity Engine, Django, Vite, Tailwind CSS
-• Specializations: AI Integration (Gemini), Chrome Extensions (MV3), 3D Modeling (Blender)`,
-  contact: `Get in Touch:
-• GitHub: https://github.com/AKHXI1
-• Email: akhil.dev.work@gmail.com
-• Status: Available for freelance, high-impact roles, and innovative projects.`,
-  social: `Connect with Akhil:
+• Languages: Python, TypeScript, Dart, Java, C, C#, SQL
+• Frameworks: React, Flutter, Unity 3D, Django, Tailwind CSS, Bootstrap
+• Tools & AI: Google Gemini AI, Chrome Extensions MV3, Adobe Photoshop, Blender 3D, Git`,
+  contact: `Communication Channels:
+• WhatsApp: https://wa.me/8138902941
+• Email:    akhil.dev.work@gmail.com
+• Twitter:  https://twitter.com/Akhxi1S
 • GitHub:   https://github.com/AKHXI1
-• LinkedIn: https://linkedin.com/in/akhil-developer
-• Portfolio: (You are here!)`,
-  'sudo hire': `ACCESS GRANTED: Candidate Akhil has been unlocked with 100% enthusiasm, top-tier engineering craft, and unmatched problem-solving speed. Email dispatch ready!`,
-  'sudo hire akhil': `ACCESS GRANTED: Candidate Akhil has been unlocked with 100% enthusiasm, top-tier engineering craft, and unmatched problem-solving speed. Email dispatch ready!`
+• Location: Kerala, India`,
+  'sudo hire': `ACCESS GRANTED: Candidate Akhil Sabu unlocked with 100% enthusiasm, SJCET engineering rigor, and multidisciplinary design craft!`,
+  'sudo hire akhil': `ACCESS GRANTED: Candidate Akhil Sabu unlocked with 100% enthusiasm, SJCET engineering rigor, and multidisciplinary design craft!`
 };
-

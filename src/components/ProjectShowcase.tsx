@@ -171,6 +171,20 @@ export const ProjectShowcase: React.FC = () => {
                         </a>
                       )}
 
+                      {project.liveUrl && (
+                        <a
+                          href={project.liveUrl}
+                          target="_blank"
+                          rel="noreferrer"
+                          onClick={() => playSound('click')}
+                          className="px-3 py-2 rounded-xl bg-cyan-500/20 hover:bg-cyan-500/30 text-cyan-300 border border-cyan-500/40 text-xs font-mono font-medium transition-all shadow-sm flex items-center gap-1"
+                          title="Open Live Work"
+                        >
+                          <span>Live Link</span>
+                          <ExternalLink className="w-3 h-3" />
+                        </a>
+                      )}
+
                       {project.githubUrl && (
                         <a
                           href={project.githubUrl}
