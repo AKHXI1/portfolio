@@ -13,6 +13,7 @@ import { Footer } from './components/Footer';
 import { InteractiveTerminal } from './components/InteractiveTerminal';
 import { CommandPalette } from './components/CommandPalette';
 import { MatrixRain } from './components/MatrixRain';
+import { ErrorBoundary } from './components/ErrorBoundary';
 
 export const App: React.FC = () => {
   const [terminalOpen, setTerminalOpen] = useState(false);
@@ -51,67 +52,69 @@ export const App: React.FC = () => {
   };
 
   return (
-    <div className="relative min-h-screen bg-[#05060a] text-slate-100 overflow-x-hidden selection:bg-cyan-500/30 selection:text-cyan-200">
-      {/* Ambient dynamic cursor spotlight */}
-      <CursorSpotlight />
+    <ErrorBoundary>
+      <div className="relative min-h-screen bg-[#05060a] text-slate-100 overflow-x-hidden selection:bg-cyan-500/30 selection:text-cyan-200">
+        {/* Ambient dynamic cursor spotlight */}
+        <CursorSpotlight />
 
-      {/* Dynamic Canvas Particles & Ambient Gradients */}
-      <BackgroundMesh />
+        {/* Dynamic Canvas Particles & Ambient Gradients */}
+        <BackgroundMesh />
 
-      {/* Navigation Bar */}
-      <Navbar
-        onOpenTerminal={() => setTerminalOpen(true)}
-        onOpenCommandPalette={() => setCommandPaletteOpen(true)}
-      />
-
-      {/* Main Content */}
-      <main className="relative z-10">
-        <Hero
+        {/* Navigation Bar */}
+        <Navbar
           onOpenTerminal={() => setTerminalOpen(true)}
-          onExploreProjects={handleExploreProjects}
+          onOpenCommandPalette={() => setCommandPaletteOpen(true)}
         />
 
-        {/* Identity & Academic Foundation */}
-        <AboutSection />
+        {/* Main Content */}
+        <main className="relative z-10">
+          <Hero
+            onOpenTerminal={() => setTerminalOpen(true)}
+            onExploreProjects={handleExploreProjects}
+          />
 
-        {/* Interactive Lab */}
-        <InteractiveSimulator />
+          {/* Identity & Academic Foundation */}
+          <AboutSection />
 
-        {/* Project Showcase */}
-        <ProjectShowcase />
+          {/* Interactive Lab */}
+          <InteractiveSimulator />
 
-        {/* Technical Skills & Stack */}
-        <SkillsArsenal />
+          {/* Project Showcase */}
+          <ProjectShowcase />
 
-        {/* Journey & Milestones */}
-        <JourneyTimeline />
+          {/* Technical Skills & Stack */}
+          <SkillsArsenal />
 
-        {/* Contact & Transmission */}
-        <ContactSection />
-      </main>
+          {/* Journey & Milestones */}
+          <JourneyTimeline />
 
-      {/* Footer */}
-      <Footer onOpenTerminal={() => setTerminalOpen(true)} />
+          {/* Contact & Transmission */}
+          <ContactSection />
+        </main>
 
-      {/* Modals & Overlays */}
-      <InteractiveTerminal
-        isOpen={terminalOpen}
-        onClose={() => setTerminalOpen(false)}
-        onTriggerMatrix={() => setMatrixActive(true)}
-      />
+        {/* Footer */}
+        <Footer onOpenTerminal={() => setTerminalOpen(true)} />
 
-      <CommandPalette
-        isOpen={commandPaletteOpen}
-        onClose={() => setCommandPaletteOpen(false)}
-        onOpenTerminal={() => setTerminalOpen(true)}
-        onTriggerMatrix={() => setMatrixActive(true)}
-      />
+        {/* Modals & Overlays */}
+        <InteractiveTerminal
+          isOpen={terminalOpen}
+          onClose={() => setTerminalOpen(false)}
+          onTriggerMatrix={() => setMatrixActive(true)}
+        />
 
-      <MatrixRain
-        isActive={matrixActive}
-        onClose={() => setMatrixActive(false)}
-      />
-    </div>
+        <CommandPalette
+          isOpen={commandPaletteOpen}
+          onClose={() => setCommandPaletteOpen(false)}
+          onOpenTerminal={() => setTerminalOpen(true)}
+          onTriggerMatrix={() => setMatrixActive(true)}
+        />
+
+        <MatrixRain
+          isActive={matrixActive}
+          onClose={() => setMatrixActive(false)}
+        />
+      </div>
+    </ErrorBoundary>
   );
 };
 

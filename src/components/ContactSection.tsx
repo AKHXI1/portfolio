@@ -19,16 +19,20 @@ export const ContactSection: React.FC = () => {
 
   useEffect(() => {
     const updateTime = () => {
-      const now = new Date();
-      setLocalTime(
-        now.toLocaleTimeString('en-US', {
-          timeZone: 'Asia/Kolkata',
-          hour: '2-digit',
-          minute: '2-digit',
-          second: '2-digit',
-          hour12: true
-        })
-      );
+      try {
+        const now = new Date();
+        setLocalTime(
+          now.toLocaleTimeString('en-US', {
+            timeZone: 'Asia/Kolkata',
+            hour: '2-digit',
+            minute: '2-digit',
+            second: '2-digit',
+            hour12: true
+          })
+        );
+      } catch {
+        setLocalTime(new Date().toLocaleTimeString());
+      }
     };
     updateTime();
     const interval = setInterval(updateTime, 1000);

@@ -57,6 +57,7 @@ export const InteractiveSimulator: React.FC = () => {
   const canvasRef = useRef<HTMLCanvasElement | null>(null);
 
   useEffect(() => {
+    if (activeTab !== 'verselens') return;
     const canvas = canvasRef.current;
     if (!canvas) return;
     const ctx = canvas.getContext('2d');
@@ -66,7 +67,8 @@ export const InteractiveSimulator: React.FC = () => {
     let phase = 0;
 
     const renderWave = () => {
-      const w = (canvas.width = canvas.parentElement?.clientWidth || 300);
+      if (!canvas || !canvas.parentElement) return;
+      const w = (canvas.width = canvas.parentElement.clientWidth || 300);
       const h = (canvas.height = 70);
 
       ctx.clearRect(0, 0, w, h);
@@ -77,7 +79,7 @@ export const InteractiveSimulator: React.FC = () => {
 
       // Draw active equalizer bars
       const barCount = 36;
-      const barWidth = (w / barCount) - 3;
+      const barWidth = Math.max((w / barCount) - 3, 2);
 
       for (let i = 0; i < barCount; i++) {
         const heightMultiplier = isPlaying 
@@ -95,7 +97,11 @@ export const InteractiveSimulator: React.FC = () => {
 
         ctx.fillStyle = grad;
         ctx.beginPath();
-        ctx.roundRect(x, y, barWidth, barHeight, 3);
+        if (typeof ctx.roundRect === 'function') {
+          ctx.roundRect(x, y, barWidth, barHeight, 3);
+        } else {
+          ctx.rect(x, y, barWidth, barHeight);
+        }
         ctx.fill();
       }
 
@@ -105,7 +111,7 @@ export const InteractiveSimulator: React.FC = () => {
     renderWave();
 
     return () => cancelAnimationFrame(animId);
-  }, [isPlaying]);
+  }, [activeTab, isPlaying]);
 
   // SignSync state
   const [inputWord, setInputWord] = useState('HELLO');

@@ -111,10 +111,7 @@ export const BackgroundMesh: React.FC = () => {
         ctx.beginPath();
         ctx.arc(p.x, p.y, p.size, 0, Math.PI * 2);
         ctx.fillStyle = `${p.color}${p.baseAlpha})`;
-        ctx.shadowBlur = 10;
-        ctx.shadowColor = `${p.color}0.8)`;
         ctx.fill();
-        ctx.shadowBlur = 0;
 
         // Connect nearby particles with glowing lines
         for (let j = i + 1; j < particles.length; j++) {
