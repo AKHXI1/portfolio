@@ -1,13 +1,15 @@
 import React, { useState, useEffect } from 'react';
-import { Mail, Copy, Check, Send, Sparkles, Clock, Globe, ArrowUpRight, ShieldCheck, Zap } from 'lucide-react';
+import { Mail, Copy, Check, Send, Sparkles, Clock, Globe, ArrowUpRight } from 'lucide-react';
 import confetti from 'canvas-confetti';
 import { PERSONAL_INFO } from '../data/portfolioData';
 import { playSound } from '../utils/sound';
 import { GithubIcon, LinkedinIcon } from './Icons';
+import { usePortfolioMode } from '../context/ModeContext';
 
 export const ContactSection: React.FC = () => {
+  const { isDev, mode } = usePortfolioMode();
   const [copied, setCopied] = useState(false);
-  const [selectedTopic, setSelectedTopic] = useState('Build an AI / Web App');
+  const [selectedTopic, setSelectedTopic] = useState('Odoo ERP Customization');
   const [formData, setFormData] = useState({
     name: '',
     email: '',
@@ -16,6 +18,30 @@ export const ContactSection: React.FC = () => {
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [submitted, setSubmitted] = useState(false);
   const [localTime, setLocalTime] = useState('');
+
+  const devTopics = [
+    'Odoo ERP Customization',
+    'Django / FastAPI Web App',
+    'AI / SignSync Integration',
+    'Unity 3D Game Dev',
+    'Full-Stack Role',
+    'Just saying hi!'
+  ];
+
+  const designTopics = [
+    'Branding & Visual Identity',
+    'Packaging Dielines (Kovax-style)',
+    'Wedding Invitation Suite',
+    'Posters & Motion Graphics',
+    '3D Character Modeling',
+    'Figma UI/UX Design'
+  ];
+
+  const projectTopics = isDev ? devTopics : designTopics;
+
+  useEffect(() => {
+    setSelectedTopic(isDev ? devTopics[0] : designTopics[0]);
+  }, [mode]);
 
   useEffect(() => {
     const updateTime = () => {
@@ -47,7 +73,9 @@ export const ContactSection: React.FC = () => {
       particleCount: 65,
       spread: 70,
       origin: { y: 0.7 },
-      colors: ['#38bdf8', '#a855f7', '#34d399', '#f59e0b']
+      colors: isDev
+        ? ['#00f0ff', '#10b981', '#38bdf8']
+        : ['#ff5c4d', '#8b5cf6', '#f97316']
     });
     setTimeout(() => setCopied(false), 2500);
   };
@@ -67,90 +95,117 @@ export const ContactSection: React.FC = () => {
         particleCount: 100,
         spread: 85,
         origin: { y: 0.6 },
-        colors: ['#38bdf8', '#a855f7', '#34d399', '#f59e0b', '#00f0ff']
+        colors: isDev
+          ? ['#00f0ff', '#10b981', '#38bdf8', '#34d399']
+          : ['#ff5c4d', '#8b5cf6', '#f97316', '#ec4899']
       });
-    }, 1200);
+    }, 1000);
   };
-
-  const projectTopics = [
-    'Build an AI / Web App',
-    'Flutter Mobile Development',
-    'Full-Stack Architecture',
-    'Unity 3D / Creative Dev',
-    'Technical Consultation',
-    'Just saying hi!'
-  ];
 
   return (
     <section id="contact" className="py-24 px-4 sm:px-6 lg:px-8 relative z-10">
       <div className="max-w-6xl mx-auto">
-        
-        {/* Section Header */}
         <div className="text-center mb-16">
-          <div className="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-full bg-cyan-500/10 border border-cyan-500/30 text-cyan-400 text-xs font-mono mb-4">
+          <div
+            className={`inline-flex items-center gap-2 px-3.5 py-1.5 rounded-full border text-xs font-mono mb-4 ${
+              isDev
+                ? 'bg-cyan-500/10 border-cyan-500/30 text-cyan-400'
+                : 'bg-[#ff5c4d]/10 border-[#ff5c4d]/30 text-[#e64435]'
+            }`}
+          >
             <Sparkles className="w-3.5 h-3.5" />
-            <span>Initiate Direct Transmission</span>
+            <span>{isDev ? 'Initiate Direct Transmission' : 'Book a Creative Collaboration'}</span>
           </div>
-          <h2 className="text-3xl sm:text-5xl lg:text-6xl font-display font-extrabold text-white tracking-tight mb-4">
+          <h2
+            className={`text-3xl sm:text-5xl lg:text-6xl font-extrabold tracking-tight mb-4 ${
+              isDev ? 'font-mono text-white' : 'font-editorial text-zinc-900'
+            }`}
+          >
             Let's Build Something <span className="text-gradient">Iconic</span>
           </h2>
-          <p className="max-w-2xl mx-auto text-slate-400 text-sm sm:text-base">
-            Have a project, a startup concept, or an innovative engineering opening? Reach out directly.
+          <p className={`max-w-2xl mx-auto text-sm sm:text-base ${isDev ? 'text-slate-400' : 'text-zinc-600'}`}>
+            {isDev
+              ? 'Need an Odoo ERP customization, Django/FastAPI platform, or AI prototype? Reach out directly.'
+              : 'Looking for bold brand identity, Kovax-level packaging dielines, bespoke wedding suites, or 3D artwork?'}
           </p>
         </div>
 
-        {/* Contact Bento Grid */}
         <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 items-start">
-          
-          {/* Left Column: Direct Info & Availability status */}
           <div className="lg:col-span-5 space-y-6">
-            
-            {/* Status Card */}
-            <div className="spotlight-card p-7 bg-[#080b14] border border-white/10 shadow-glass-card space-y-4">
+            <div className="spotlight-card p-7 space-y-4">
               <div className="flex items-center justify-between">
-                <span className="text-xs font-mono uppercase tracking-wider text-slate-400">
-                  Engineering Availability
+                <span className={`text-xs font-mono uppercase tracking-wider ${isDev ? 'text-slate-400' : 'text-zinc-500'}`}>
+                  {isDev ? 'Engineering Availability' : 'Studio Availability'}
                 </span>
-                <span className="inline-flex items-center gap-2 px-3 py-1 rounded-full text-xs font-mono font-bold bg-emerald-500/10 text-emerald-400 border border-emerald-500/30">
-                  <span className="w-2 h-2 rounded-full bg-emerald-400 animate-ping" />
+                <span
+                  className={`inline-flex items-center gap-2 px-3 py-1 rounded-full text-xs font-mono font-bold border ${
+                    isDev
+                      ? 'bg-emerald-500/10 text-emerald-400 border-emerald-500/30'
+                      : 'bg-[#ff5c4d]/10 text-[#e64435] border-[#ff5c4d]/30'
+                  }`}
+                >
+                  <span
+                    className={`w-2 h-2 rounded-full animate-ping ${
+                      isDev ? 'bg-emerald-400' : 'bg-[#ff5c4d]'
+                    }`}
+                  />
                   Available Now
                 </span>
               </div>
 
-              <h3 className="text-xl font-display font-bold text-white leading-snug">
-                Open for high-impact software roles, technical consulting & custom builds
+              <h3
+                className={`text-xl font-bold leading-snug ${
+                  isDev ? 'font-mono text-white' : 'font-editorial text-zinc-900'
+                }`}
+              >
+                {isDev
+                  ? 'Open for high-impact software roles, Odoo ERP & custom full-stack builds'
+                  : 'Open for branding retainers, packaging dielines, print commissions & 3D craft'}
               </h3>
 
-              <div className="pt-3 border-t border-white/5 space-y-3 text-xs font-mono text-slate-400">
+              <div
+                className={`pt-3 border-t space-y-3 text-xs font-mono ${
+                  isDev ? 'border-white/5 text-slate-400' : 'border-zinc-900/10 text-zinc-600'
+                }`}
+              >
                 <div className="flex items-center justify-between">
                   <span className="flex items-center gap-2">
-                    <Clock className="w-4 h-4 text-sky-400" />
+                    <Clock className={`w-4 h-4 ${isDev ? 'text-cyan-400' : 'text-[#ff5c4d]'}`} />
                     Local Time (India / IST):
                   </span>
-                  <span className="text-white font-bold">{localTime || 'Calculating...'}</span>
+                  <span className={`font-bold ${isDev ? 'text-white' : 'text-zinc-900'}`}>
+                    {localTime || 'Calculating...'}
+                  </span>
                 </div>
 
                 <div className="flex items-center justify-between">
                   <span className="flex items-center gap-2">
-                    <Globe className="w-4 h-4 text-purple-400" />
+                    <Globe className={`w-4 h-4 ${isDev ? 'text-emerald-400' : 'text-purple-600'}`} />
                     Response Window:
                   </span>
-                  <span className="text-emerald-400 font-semibold">&lt; 24 hours guaranteed</span>
+                  <span className={`font-semibold ${isDev ? 'text-emerald-400' : 'text-purple-700'}`}>
+                    &lt; 24 hours guaranteed
+                  </span>
                 </div>
               </div>
             </div>
 
-            {/* Email Quick Copy Box */}
-            <div className="spotlight-card p-5 bg-[#080b14] border border-white/10 flex items-center justify-between gap-3 shadow-glass-card">
+            <div className="spotlight-card p-5 flex items-center justify-between gap-3">
               <div className="flex items-center gap-3.5 overflow-hidden">
-                <div className="p-3 rounded-2xl bg-sky-500/15 text-sky-400 border border-sky-500/30 shrink-0">
+                <div
+                  className={`p-3 rounded-2xl border shrink-0 ${
+                    isDev
+                      ? 'bg-cyan-500/15 text-cyan-400 border-cyan-500/30'
+                      : 'bg-[#ff5c4d]/10 text-[#ff5c4d] border-[#ff5c4d]/25'
+                  }`}
+                >
                   <Mail className="w-5 h-5" />
                 </div>
                 <div className="overflow-hidden">
-                  <div className="text-[10px] font-mono uppercase tracking-wider text-slate-500">
+                  <div className={`text-[10px] font-mono uppercase tracking-wider ${isDev ? 'text-slate-500' : 'text-zinc-500'}`}>
                     Direct Channel
                   </div>
-                  <div className="text-sm font-mono font-bold text-white truncate">
+                  <div className={`text-sm font-mono font-bold truncate ${isDev ? 'text-white' : 'text-zinc-900'}`}>
                     {PERSONAL_INFO.email}
                   </div>
                 </div>
@@ -160,8 +215,10 @@ export const ContactSection: React.FC = () => {
                 onClick={handleCopyEmail}
                 className={`p-3 rounded-2xl border text-xs transition-all duration-200 shrink-0 ${
                   copied
-                    ? 'bg-emerald-500/20 border-emerald-400 text-emerald-300'
-                    : 'bg-white/5 border-white/10 text-slate-300 hover:text-white hover:bg-white/10 hover:border-white/20'
+                    ? 'bg-emerald-500/20 border-emerald-400 text-emerald-500'
+                    : isDev
+                    ? 'bg-white/5 border-white/10 text-slate-300 hover:text-white hover:bg-white/10'
+                    : 'bg-[#faf6f0] border-zinc-900/10 text-zinc-700 hover:bg-zinc-100'
                 }`}
                 title="Copy Email Address"
               >
@@ -169,25 +226,24 @@ export const ContactSection: React.FC = () => {
               </button>
             </div>
 
-            {/* Social Network Badges */}
             <div className="grid grid-cols-2 gap-3">
               <a
                 href={PERSONAL_INFO.whatsapp}
                 target="_blank"
                 rel="noreferrer"
                 onClick={() => playSound('click')}
-                className="spotlight-card p-4 sm:p-5 bg-[#080b14] border border-white/10 hover:border-emerald-500/40 transition-all flex items-center justify-between group shadow-glass-card"
+                className="spotlight-card p-4 sm:p-5 flex items-center justify-between group"
               >
                 <div className="flex items-center gap-3">
-                  <div className="w-8 h-8 rounded-xl bg-emerald-500/15 border border-emerald-500/30 text-emerald-400 flex items-center justify-center font-bold text-xs">
+                  <div className="w-8 h-8 rounded-xl bg-emerald-500/15 border border-emerald-500/30 text-emerald-500 flex items-center justify-center font-bold text-xs">
                     WA
                   </div>
                   <div>
-                    <div className="text-xs font-bold text-white">WhatsApp</div>
-                    <div className="text-[10px] font-mono text-emerald-400">Direct Chat</div>
+                    <div className={`text-xs font-bold ${isDev ? 'text-white' : 'text-zinc-900'}`}>WhatsApp</div>
+                    <div className="text-[10px] font-mono text-emerald-500">Direct Chat</div>
                   </div>
                 </div>
-                <ArrowUpRight className="w-4 h-4 text-slate-600 group-hover:text-emerald-400 transition-transform group-hover:translate-x-0.5" />
+                <ArrowUpRight className="w-4 h-4 text-slate-500 group-hover:text-emerald-500 transition-transform group-hover:translate-x-0.5" />
               </a>
 
               <a
@@ -195,18 +251,24 @@ export const ContactSection: React.FC = () => {
                 target="_blank"
                 rel="noreferrer"
                 onClick={() => playSound('click')}
-                className="spotlight-card p-4 sm:p-5 bg-[#080b14] border border-white/10 hover:border-sky-500/40 transition-all flex items-center justify-between group shadow-glass-card"
+                className="spotlight-card p-4 sm:p-5 flex items-center justify-between group"
               >
                 <div className="flex items-center gap-3">
-                  <div className="w-8 h-8 rounded-xl bg-sky-500/15 border border-sky-500/30 text-sky-400 flex items-center justify-center font-bold text-xs">
+                  <div
+                    className={`w-8 h-8 rounded-xl border flex items-center justify-center font-bold text-xs ${
+                      isDev
+                        ? 'bg-cyan-500/15 border-cyan-500/30 text-cyan-400'
+                        : 'bg-[#ff5c4d]/10 border-[#ff5c4d]/30 text-[#ff5c4d]'
+                    }`}
+                  >
                     𝕏
                   </div>
                   <div>
-                    <div className="text-xs font-bold text-white">Twitter / 𝕏</div>
+                    <div className={`text-xs font-bold ${isDev ? 'text-white' : 'text-zinc-900'}`}>Twitter / 𝕏</div>
                     <div className="text-[10px] font-mono text-slate-500">@Akhxi1S</div>
                   </div>
                 </div>
-                <ArrowUpRight className="w-4 h-4 text-slate-600 group-hover:text-sky-400 transition-transform group-hover:translate-x-0.5" />
+                <ArrowUpRight className="w-4 h-4 text-slate-500 group-hover:text-[#ff5c4d] transition-transform group-hover:translate-x-0.5" />
               </a>
 
               <a
@@ -214,16 +276,16 @@ export const ContactSection: React.FC = () => {
                 target="_blank"
                 rel="noreferrer"
                 onClick={() => playSound('click')}
-                className="spotlight-card p-4 sm:p-5 bg-[#080b14] border border-white/10 hover:border-sky-500/40 transition-all flex items-center justify-between group shadow-glass-card"
+                className="spotlight-card p-4 sm:p-5 flex items-center justify-between group"
               >
                 <div className="flex items-center gap-3">
-                  <GithubIcon className="w-5 h-5 text-slate-300 group-hover:text-white" />
+                  <GithubIcon className={`w-5 h-5 ${isDev ? 'text-slate-300 group-hover:text-white' : 'text-zinc-700 group-hover:text-zinc-950'}`} />
                   <div>
-                    <div className="text-xs font-bold text-white">GitHub</div>
+                    <div className={`text-xs font-bold ${isDev ? 'text-white' : 'text-zinc-900'}`}>GitHub</div>
                     <div className="text-[10px] font-mono text-slate-500">@AKHXI1</div>
                   </div>
                 </div>
-                <ArrowUpRight className="w-4 h-4 text-slate-600 group-hover:text-sky-400 transition-transform group-hover:translate-x-0.5" />
+                <ArrowUpRight className="w-4 h-4 text-slate-500 group-hover:text-cyan-400 transition-transform group-hover:translate-x-0.5" />
               </a>
 
               <a
@@ -231,49 +293,52 @@ export const ContactSection: React.FC = () => {
                 target="_blank"
                 rel="noreferrer"
                 onClick={() => playSound('click')}
-                className="spotlight-card p-4 sm:p-5 bg-[#080b14] border border-white/10 hover:border-purple-500/40 transition-all flex items-center justify-between group shadow-glass-card"
+                className="spotlight-card p-4 sm:p-5 flex items-center justify-between group"
               >
                 <div className="flex items-center gap-3">
-                  <LinkedinIcon className="w-5 h-5 text-purple-400 group-hover:text-purple-300" />
+                  <LinkedinIcon className="w-5 h-5 text-purple-500" />
                   <div>
-                    <div className="text-xs font-bold text-white">LinkedIn</div>
+                    <div className={`text-xs font-bold ${isDev ? 'text-white' : 'text-zinc-900'}`}>LinkedIn</div>
                     <div className="text-[10px] font-mono text-slate-500">Connect</div>
                   </div>
                 </div>
-                <ArrowUpRight className="w-4 h-4 text-slate-600 group-hover:text-purple-400 transition-transform group-hover:translate-x-0.5" />
+                <ArrowUpRight className="w-4 h-4 text-slate-500 group-hover:text-purple-500 transition-transform group-hover:translate-x-0.5" />
               </a>
             </div>
-
           </div>
 
-          {/* Right Column: Interactive Contact Form */}
           <div className="lg:col-span-7">
-            <div className="spotlight-card p-7 sm:p-9 bg-[#080b14] border border-white/10 shadow-2xl">
-              
+            <div className="spotlight-card p-7 sm:p-9">
               {submitted ? (
-                <div className="py-14 text-center space-y-4 animate-in fade-in zoom-in-95">
-                  <div className="w-16 h-16 rounded-full bg-emerald-500/20 text-emerald-400 border border-emerald-500/30 flex items-center justify-center mx-auto shadow-lg shadow-emerald-500/20 animate-bounce">
+                <div className="py-14 text-center space-y-4">
+                  <div className="w-16 h-16 rounded-full bg-emerald-500/20 text-emerald-500 border border-emerald-500/30 flex items-center justify-center mx-auto animate-bounce">
                     <Check className="w-8 h-8" />
                   </div>
-                  <h3 className="text-2xl font-display font-bold text-white">Transmission Encrypted & Dispatched!</h3>
-                  <p className="text-sm text-slate-300 max-w-md mx-auto">
-                    Thank you for reaching out, <span className="text-sky-300 font-semibold">{formData.name}</span>. I have received your message and will respond within 24 hours.
+                  <h3 className={`text-2xl font-bold ${isDev ? 'font-mono text-white' : 'font-editorial text-zinc-900'}`}>
+                    {isDev ? 'Transmission Encrypted & Dispatched!' : 'Creative Brief Received!'}
+                  </h3>
+                  <p className={`text-sm max-w-md mx-auto ${isDev ? 'text-slate-300' : 'text-zinc-600'}`}>
+                    Thank you for reaching out, <span className="font-semibold">{formData.name}</span>. I have received your inquiry on{' '}
+                    <span className="font-semibold">{selectedTopic}</span> and will respond within 24 hours.
                   </p>
                   <button
                     onClick={() => {
                       setSubmitted(false);
                       setFormData({ name: '', email: '', message: '' });
                     }}
-                    className="mt-4 px-6 py-3 rounded-2xl bg-white/10 hover:bg-white/15 text-xs font-semibold text-white border border-white/15 transition-all"
+                    className={`mt-4 px-6 py-3 rounded-2xl border text-xs font-semibold transition-all ${
+                      isDev
+                        ? 'bg-white/10 hover:bg-white/15 text-white border-white/15'
+                        : 'bg-zinc-900 hover:bg-zinc-800 text-white border-zinc-900'
+                    }`}
                   >
-                    Send Another Transmission
+                    Send Another Message
                   </button>
                 </div>
               ) : (
                 <form onSubmit={handleSubmit} className="space-y-6">
-                  {/* Topic Select */}
                   <div className="space-y-2.5">
-                    <label className="text-xs font-mono uppercase tracking-wider text-slate-400">
+                    <label className={`text-xs font-mono uppercase tracking-wider ${isDev ? 'text-slate-400' : 'text-zinc-500'}`}>
                       What is the primary topic of your message?
                     </label>
                     <div className="flex flex-wrap gap-2">
@@ -287,8 +352,12 @@ export const ContactSection: React.FC = () => {
                           }}
                           className={`px-3.5 py-2 rounded-xl text-xs font-medium border transition-all ${
                             selectedTopic === topic
-                              ? 'bg-sky-500/20 border-sky-400 text-sky-300 shadow-glow-cyan'
-                              : 'bg-white/[0.03] border-white/5 text-slate-400 hover:bg-white/10 hover:text-white'
+                              ? isDev
+                                ? 'bg-cyan-500/20 border-cyan-400 text-cyan-200 shadow-glow-cyan'
+                                : 'bg-[#ff5c4d] border-[#ff5c4d] text-white shadow-glow-coral'
+                              : isDev
+                              ? 'bg-white/[0.03] border-white/5 text-slate-400 hover:bg-white/10 hover:text-white'
+                              : 'bg-[#faf6f0] border-zinc-900/10 text-zinc-700 hover:bg-zinc-100'
                           }`}
                         >
                           {topic}
@@ -297,10 +366,9 @@ export const ContactSection: React.FC = () => {
                     </div>
                   </div>
 
-                  {/* Input Fields */}
                   <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
                     <div className="space-y-2">
-                      <label className="text-xs font-mono text-slate-400">
+                      <label className={`text-xs font-mono ${isDev ? 'text-slate-400' : 'text-zinc-600'}`}>
                         Your Name *
                       </label>
                       <input
@@ -308,13 +376,17 @@ export const ContactSection: React.FC = () => {
                         required
                         value={formData.name}
                         onChange={(e) => setFormData({ ...formData, name: e.target.value })}
-                        placeholder="Ada Lovelace"
-                        className="w-full px-4 py-3 rounded-xl bg-white/[0.03] border border-white/10 text-white text-sm focus:outline-none focus:border-sky-400 transition-colors shadow-inner"
+                        placeholder={isDev ? 'Ada Lovelace' : 'Dieter Rams'}
+                        className={`w-full px-4 py-3 rounded-xl border text-sm focus:outline-none transition-colors ${
+                          isDev
+                            ? 'bg-white/[0.03] border-white/10 text-white focus:border-cyan-400'
+                            : 'bg-[#faf6f0] border-zinc-900/15 text-zinc-900 focus:border-[#ff5c4d]'
+                        }`}
                       />
                     </div>
 
                     <div className="space-y-2">
-                      <label className="text-xs font-mono text-slate-400">
+                      <label className={`text-xs font-mono ${isDev ? 'text-slate-400' : 'text-zinc-600'}`}>
                         Email Address *
                       </label>
                       <input
@@ -322,14 +394,18 @@ export const ContactSection: React.FC = () => {
                         required
                         value={formData.email}
                         onChange={(e) => setFormData({ ...formData, email: e.target.value })}
-                        placeholder="ada@example.com"
-                        className="w-full px-4 py-3 rounded-xl bg-white/[0.03] border border-white/10 text-white text-sm focus:outline-none focus:border-sky-400 transition-colors shadow-inner"
+                        placeholder="hello@example.com"
+                        className={`w-full px-4 py-3 rounded-xl border text-sm focus:outline-none transition-colors ${
+                          isDev
+                            ? 'bg-white/[0.03] border-white/10 text-white focus:border-cyan-400'
+                            : 'bg-[#faf6f0] border-zinc-900/15 text-zinc-900 focus:border-[#ff5c4d]'
+                        }`}
                       />
                     </div>
                   </div>
 
                   <div className="space-y-2">
-                    <label className="text-xs font-mono text-slate-400">
+                    <label className={`text-xs font-mono ${isDev ? 'text-slate-400' : 'text-zinc-600'}`}>
                       Project Details / Inquiry *
                     </label>
                     <textarea
@@ -337,35 +413,44 @@ export const ContactSection: React.FC = () => {
                       rows={4}
                       value={formData.message}
                       onChange={(e) => setFormData({ ...formData, message: e.target.value })}
-                      placeholder="Outline your timeline, goals, or role specifications..."
-                      className="w-full px-4 py-3 rounded-xl bg-white/[0.03] border border-white/10 text-white text-sm focus:outline-none focus:border-sky-400 transition-colors resize-none shadow-inner"
+                      placeholder={
+                        isDev
+                          ? 'Outline your architecture goals, Odoo requirements, or role specifications...'
+                          : 'Share your brand vision, packaging dimensions, print timeline, or creative brief...'
+                      }
+                      className={`w-full px-4 py-3 rounded-xl border text-sm focus:outline-none transition-colors resize-none ${
+                        isDev
+                          ? 'bg-white/[0.03] border-white/10 text-white focus:border-cyan-400'
+                          : 'bg-[#faf6f0] border-zinc-900/15 text-zinc-900 focus:border-[#ff5c4d]'
+                      }`}
                     />
                   </div>
 
                   <button
                     type="submit"
                     disabled={isSubmitting}
-                    className="w-full py-4 rounded-2xl bg-gradient-to-r from-sky-500 via-indigo-600 to-purple-600 text-white font-semibold text-sm shadow-glow-cyan hover:scale-[1.01] active:scale-[0.99] transition-all flex items-center justify-center gap-2 group disabled:opacity-50"
+                    className={`w-full py-4 rounded-2xl font-bold text-sm hover:scale-[1.01] active:scale-[0.99] transition-all flex items-center justify-center gap-2 group disabled:opacity-50 ${
+                      isDev
+                        ? 'bg-gradient-to-r from-cyan-500 via-teal-500 to-emerald-500 text-slate-950 shadow-glow-cyan'
+                        : 'bg-gradient-to-r from-[#ff5c4d] via-rose-500 to-purple-600 text-white shadow-glow-coral'
+                    }`}
                   >
                     {isSubmitting ? (
                       <span className="font-mono text-xs animate-pulse">
-                        Encrypting & Dispatching Transmission...
+                        {isDev ? 'Encrypting & Dispatching...' : 'Sending Creative Brief...'}
                       </span>
                     ) : (
                       <>
-                        <span>Transmit Message</span>
+                        <span>{isDev ? 'Transmit Message' : 'Send Creative Brief'}</span>
                         <Send className="w-4 h-4 transition-transform group-hover:translate-x-1" />
                       </>
                     )}
                   </button>
                 </form>
               )}
-
             </div>
           </div>
-
         </div>
-
       </div>
     </section>
   );

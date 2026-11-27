@@ -6,14 +6,34 @@
   :root {
     color-scheme: dark;
   }
-  
-  body {
-    font-family: 'Plus Jakarta Sans', system-ui, -apple-system, sans-serif;
-    background-color: #05060a;
+
+  :root[data-mode='design'] {
+    color-scheme: light;
   }
 
-  h1, h2, h3, .font-display {
-    font-family: 'Syne', 'Plus Jakarta Sans', sans-serif;
+  body {
+    font-family: 'Inter', 'Plus Jakarta Sans', system-ui, -apple-system, sans-serif;
+    background-color: #05070e;
+    color: #f1f5f9;
+    transition: background-color 0.65s cubic-bezier(0.22, 1, 0.36, 1), color 0.45s ease;
+  }
+
+  [data-mode='design'] body {
+    font-family: 'Plus Jakarta Sans', 'Inter', system-ui, -apple-system, sans-serif;
+    background-color: #fbf7f2;
+    color: #18181b;
+  }
+
+  [data-mode='dev'] h1,
+  [data-mode='dev'] h2,
+  [data-mode='dev'] h3 {
+    font-family: 'JetBrains Mono', 'Inter', monospace;
+  }
+
+  [data-mode='design'] h1,
+  [data-mode='design'] h2,
+  [data-mode='design'] h3 {
+    font-family: 'Clash Display', 'Syne', 'Plus Jakarta Sans', sans-serif;
   }
 
   code, kbd, samp, pre, .font-mono {
@@ -27,81 +47,96 @@
 }
 
 ::-webkit-scrollbar-track {
-  background: #05060a;
+  background: #05070e;
+}
+
+[data-mode='design'] ::-webkit-scrollbar-track {
+  background: #f5efe6;
 }
 
 ::-webkit-scrollbar-thumb {
-  background: #1a2035;
+  background: #1a243b;
   border-radius: 9999px;
 }
 
-::-webkit-scrollbar-thumb:hover {
-  background: #2a3556;
+[data-mode='design'] ::-webkit-scrollbar-thumb {
+  background: #d6c8b8;
 }
 
-/* Glassmorphism 2.0 */
+::-webkit-scrollbar-thumb:hover {
+  background: #00f0ff;
+}
+
+[data-mode='design'] ::-webkit-scrollbar-thumb:hover {
+  background: #ff5c4d;
+}
+
+/* Glassmorphism 2.0 (Developer Mode) */
 .glass-panel {
-  background: rgba(10, 13, 22, 0.75);
+  background: rgba(8, 13, 24, 0.78);
   backdrop-filter: blur(20px);
   -webkit-backdrop-filter: blur(20px);
-  border: 1px solid rgba(255, 255, 255, 0.08);
-  box-shadow: 0 20px 50px -15px rgba(0, 0, 0, 0.7), inset 0 1px 0 0 rgba(255, 255, 255, 0.1);
+  border: 1px solid rgba(56, 189, 248, 0.12);
+  box-shadow: 0 20px 50px -15px rgba(0, 0, 0, 0.7), inset 0 1px 0 0 rgba(255, 255, 255, 0.08);
+  transition: background-color 0.5s ease, border-color 0.4s ease, box-shadow 0.4s ease;
 }
 
-.glass-panel-hover {
-  transition: all 0.35s cubic-bezier(0.16, 1, 0.3, 1);
+[data-mode='design'] .glass-panel {
+  background: rgba(255, 253, 249, 0.85);
+  border: 1px solid rgba(24, 24, 27, 0.09);
+  box-shadow: 0 18px 40px -18px rgba(24, 24, 27, 0.12), inset 0 1px 0 0 rgba(255, 255, 255, 0.8);
 }
 
-.glass-panel-hover:hover {
-  background: rgba(16, 21, 36, 0.88);
-  border-color: rgba(56, 189, 248, 0.4);
-  transform: translateY(-4px);
-  box-shadow: 0 25px 60px -15px rgba(0, 240, 255, 0.18), inset 0 1px 0 0 rgba(255, 255, 255, 0.2);
-}
-
-/* Luxury Typography Gradients */
+/* Luxury & Mode Typography Gradients */
 .text-gradient {
-  background: linear-gradient(135deg, #ffffff 0%, #38bdf8 45%, #a855f7 100%);
+  background: linear-gradient(135deg, #ffffff 0%, #00f0ff 48%, #10b981 100%);
   -webkit-background-clip: text;
   -webkit-text-fill-color: transparent;
 }
 
-.text-gradient-silver {
-  background: linear-gradient(180deg, #ffffff 0%, #cbd5e1 70%, #64748b 100%);
+[data-mode='design'] .text-gradient {
+  background: linear-gradient(135deg, #18181b 0%, #ff5c4d 45%, #8b5cf6 100%);
   -webkit-background-clip: text;
   -webkit-text-fill-color: transparent;
 }
 
 .text-gradient-cyan {
-  background: linear-gradient(135deg, #a5f3fc 0%, #00f0ff 50%, #0284c7 100%);
+  background: linear-gradient(135deg, #a5f3fc 0%, #00f0ff 50%, #10b981 100%);
   -webkit-background-clip: text;
   -webkit-text-fill-color: transparent;
 }
 
-.text-gradient-emerald {
-  background: linear-gradient(135deg, #6ee7b7 0%, #10b981 50%, #047857 100%);
+.text-gradient-creative {
+  background: linear-gradient(135deg, #ff5c4d 0%, #ec4899 50%, #8b5cf6 100%);
   -webkit-background-clip: text;
   -webkit-text-fill-color: transparent;
-}
-
-.text-glow {
-  text-shadow: 0 0 25px rgba(56, 189, 248, 0.45);
 }
 
 /* Spotlight Card Physics */
 .spotlight-card {
   position: relative;
   border-radius: 1.5rem;
-  background: #090c15;
-  border: 1px solid rgba(255, 255, 255, 0.07);
+  background: #080d1a;
+  border: 1px solid rgba(56, 189, 248, 0.12);
   overflow: hidden;
-  box-shadow: 0 20px 45px -15px rgba(0,0,0,0.8), inset 0 1px 0 0 rgba(255,255,255,0.08);
-  transition: border-color 0.3s ease, transform 0.3s cubic-bezier(0.16, 1, 0.3, 1), box-shadow 0.3s ease;
+  box-shadow: 0 20px 45px -15px rgba(0,0,0,0.8), inset 0 1px 0 0 rgba(255,255,255,0.07);
+  transition: background-color 0.5s ease, border-color 0.35s ease, transform 0.35s cubic-bezier(0.16, 1, 0.3, 1), box-shadow 0.35s ease;
 }
 
 .spotlight-card:hover {
-  border-color: rgba(56, 189, 248, 0.45);
-  box-shadow: 0 30px 60px -20px rgba(56, 189, 248, 0.2), inset 0 1px 0 0 rgba(255, 255, 255, 0.2);
+  border-color: rgba(0, 240, 255, 0.45);
+  box-shadow: 0 30px 60px -20px rgba(0, 240, 255, 0.2), inset 0 1px 0 0 rgba(255, 255, 255, 0.16);
+}
+
+[data-mode='design'] .spotlight-card {
+  background: #fffdf9;
+  border: 1px solid rgba(24, 24, 27, 0.1);
+  box-shadow: 0 16px 40px -18px rgba(24, 24, 27, 0.12), inset 0 1px 0 0 rgba(255,255,255,0.9);
+}
+
+[data-mode='design'] .spotlight-card:hover {
+  border-color: rgba(255, 92, 77, 0.45);
+  box-shadow: 0 28px 60px -20px rgba(255, 92, 77, 0.22), 0 10px 25px -10px rgba(139, 92, 246, 0.12);
 }
 
 /* Dynamic Cursor Spotlight Ray */
@@ -111,55 +146,53 @@
   width: 600px;
   height: 600px;
   border-radius: 50%;
-  background: radial-gradient(circle, rgba(56, 189, 248, 0.06) 0%, rgba(168, 85, 247, 0.03) 40%, transparent 70%);
+  background: radial-gradient(circle, rgba(0, 240, 255, 0.07) 0%, rgba(16, 185, 129, 0.03) 40%, transparent 70%);
   transform: translate(-50%, -50%);
   z-index: 1;
-  transition: width 0.3s, height 0.3s, opacity 0.5s;
+  transition: width 0.3s, height 0.3s, opacity 0.5s, background 0.6s ease;
 }
 
-/* Cyber Matrix & Grid Patterns */
+[data-mode='design'] .mouse-spotlight {
+  background: radial-gradient(circle, rgba(255, 92, 77, 0.09) 0%, rgba(139, 92, 246, 0.05) 45%, transparent 70%);
+}
+
+/* Cyber Matrix & Artistic Grid Patterns */
 .cyber-grid {
-  background-size: 50px 50px;
+  background-size: 46px 46px;
   background-image: 
-    linear-gradient(to right, rgba(255, 255, 255, 0.035) 1px, transparent 1px),
-    linear-gradient(to bottom, rgba(255, 255, 255, 0.035) 1px, transparent 1px);
+    linear-gradient(to right, rgba(0, 240, 255, 0.05) 1px, transparent 1px),
+    linear-gradient(to bottom, rgba(16, 185, 129, 0.04) 1px, transparent 1px);
+}
+
+.artistic-grid {
+  background-size: 40px 40px;
+  background-image:
+    linear-gradient(to right, rgba(24, 24, 27, 0.045) 1px, transparent 1px),
+    linear-gradient(to bottom, rgba(24, 24, 27, 0.045) 1px, transparent 1px);
 }
 
 .cyber-dots {
-  background-image: radial-gradient(rgba(255, 255, 255, 0.12) 1px, transparent 1px);
-  background-size: 28px 28px;
+  background-image: radial-gradient(rgba(255, 255, 255, 0.14) 1px, transparent 1px);
+  background-size: 26px 26px;
 }
 
-/* Shiny Border Shimmer */
-.shimmer-border {
+.artistic-dots {
+  background-image: radial-gradient(rgba(24, 24, 27, 0.14) 1px, transparent 1px);
+  background-size: 22px 22px;
+}
+
+/* Subtle Glitch Effect for Developer Mode */
+.glitch-hover {
   position: relative;
 }
 
-.shimmer-border::after {
-  content: '';
-  position: absolute;
-  top: 0; left: 0; right: 0; bottom: 0;
-  border-radius: inherit;
-  padding: 1px;
-  background: linear-gradient(90deg, transparent, rgba(56, 189, 248, 0.6), transparent);
-  -webkit-mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0);
-  -webkit-mask-composite: xor;
-  mask-composite: exclude;
-  pointer-events: none;
-  opacity: 0;
-  transition: opacity 0.3s;
+.glitch-hover:hover {
+  animation: glitchBurst 0.35s steps(2, end);
 }
 
-.shimmer-border:hover::after {
-  opacity: 1;
-}
-
-/* Shimmer animation bar */
-@keyframes shimmerPass {
-  100% {
-    transform: translateX(100%);
-  }
-}
-.animate-shimmer-pass {
-  animation: shimmerPass 2.2s infinite;
+@keyframes glitchBurst {
+  0% { transform: translate(0); text-shadow: -2px 0 #00f0ff, 2px 0 #10b981; }
+  33% { transform: translate(-2px, 1px); text-shadow: 2px 0 #00f0ff, -2px 0 #10b981; }
+  66% { transform: translate(2px, -1px); text-shadow: -1px 0 #38bdf8, 1px 0 #34d399; }
+  100% { transform: translate(0); text-shadow: none; }
 }

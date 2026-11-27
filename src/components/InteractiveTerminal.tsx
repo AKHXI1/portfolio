@@ -1,8 +1,9 @@
 import React, { useState, useRef, useEffect } from 'react';
-import { Terminal as TerminalIcon, X, Maximize2, Minimize2, CornerDownLeft, Sparkles } from 'lucide-react';
+import { Terminal as TerminalIcon, X, Maximize2, Minimize2, CornerDownLeft } from 'lucide-react';
 import confetti from 'canvas-confetti';
 import { TERMINAL_COMMANDS } from '../data/portfolioData';
 import { playSound } from '../utils/sound';
+import { usePortfolioMode } from '../context/ModeContext';
 
 interface TerminalProps {
   isOpen: boolean;
@@ -21,13 +22,14 @@ export const InteractiveTerminal: React.FC<TerminalProps> = ({
   onClose,
   onTriggerMatrix
 }) => {
+  const { setMode } = usePortfolioMode();
   const [input, setInput] = useState('');
   const [history, setHistory] = useState<HistoryItem[]>([
     {
       id: 'welcome-1',
       type: 'output',
-      content: `⚡ AKHIL'S SYSTEM TERMINAL [v2.4.0-release]
-Type 'help' to see available commands or click quick suggestions below.`
+      content: `⚡ AKHIL'S SYSTEM TERMINAL [v3.0-dual-mode]
+Type 'help' to see available commands, or try 'mode design' / 'mode dev'.`
     }
   ]);
   const [commandHistory, setCommandHistory] = useState<string[]>([]);
@@ -54,8 +56,6 @@ Type 'help' to see available commands or click quick suggestions below.`
     if (!cmd) return;
 
     playSound('terminal');
-
-    // Add to command history for up/down navigation
     setCommandHistory((prev) => [...prev, cmd]);
     setHistoryIndex(-1);
 
@@ -68,6 +68,30 @@ Type 'help' to see available commands or click quick suggestions below.`
 
     if (lowerCmd === 'clear') {
       setHistory([]);
+      setInput('');
+      return;
+    }
+
+    if (lowerCmd === 'mode dev' || lowerCmd === 'mode developer') {
+      setMode('dev');
+      newHistory.push({
+        id: (Date.now() + 1).toString(),
+        type: 'output',
+        content: 'Switched portfolio UI to 💻 Developer Mode (Dark Navy / Cyan-Emerald).'
+      });
+      setHistory(newHistory);
+      setInput('');
+      return;
+    }
+
+    if (lowerCmd === 'mode design' || lowerCmd === 'mode designer') {
+      setMode('design');
+      newHistory.push({
+        id: (Date.now() + 1).toString(),
+        type: 'output',
+        content: 'Switched portfolio UI to 🎨 Designer Mode (Warm Editorial / Coral-Purple).'
+      });
+      setHistory(newHistory);
       setInput('');
       return;
     }
@@ -89,15 +113,16 @@ Type 'help' to see available commands or click quick suggestions below.`
         particleCount: 100,
         spread: 80,
         origin: { y: 0.5 },
-        colors: ['#38bdf8', '#a855f7', '#34d399', '#f59e0b']
+        colors: ['#00f0ff', '#10b981', '#ff5c4d', '#8b5cf6']
       });
       playSound('success');
     }
 
     if (TERMINAL_COMMANDS[lowerCmd]) {
-      const response = typeof TERMINAL_COMMANDS[lowerCmd] === 'function'
-        ? (TERMINAL_COMMANDS[lowerCmd] as () => string)()
-        : (TERMINAL_COMMANDS[lowerCmd] as string);
+      const response =
+        typeof TERMINAL_COMMANDS[lowerCmd] === 'function'
+          ? (TERMINAL_COMMANDS[lowerCmd] as () => string)()
+          : (TERMINAL_COMMANDS[lowerCmd] as string);
 
       newHistory.push({
         id: (Date.now() + 1).toString(),
@@ -139,18 +164,24 @@ Type 'help' to see available commands or click quick suggestions below.`
     }
   };
 
-  const quickCommands = ['help', 'projects', 'verselens', 'signsync', 'skills', 'confetti', 'matrix', 'clear'];
+  const quickCommands = ['help', 'mode design', 'mode dev', 'projects', 'skills', 'confetti', 'matrix', 'clear'];
 
   return (
-    <div className="fixed inset-0 z-50 flex items-center justify-center p-3 sm:p-6 bg-black/85 backdrop-blur-xl animate-in fade-in duration-200">
+    <div
+      onClick={onClose}
+      className="fixed inset-0 z-50 flex items-center justify-center p-3 sm:p-6 bg-black/85 backdrop-blur-xl"
+    >
       <div
-        className={`relative w-full bg-[#0a0d14] border border-white/15 rounded-2xl shadow-2xl flex flex-col overflow-hidden transition-all duration-300 ${
+        className={`relative w-full bg-[#080d1a] border border-cyan-500/25 rounded-2xl shadow-2xl flex flex-col overflow-hidden transition-all duration-300 ${
           isMaximized ? 'h-[95vh] max-w-[95vw]' : 'h-[620px] max-w-3xl'
         }`}
-        onClick={() => inputRef.current?.focus()}
+        onClick={(e) => {
+          e.stopPropagation();
+          inputRef.current?.focus();
+        }}
       >
-        {/* Terminal Header Bar */}
-        <div className="flex items-center justify-between px-4 py-3 bg-[#111420] border-b border-white/10 select-none">
+        {/* Header Bar */}
+        <div className="flex items-center justify-between px-4 py-3 bg-[#0f1628] border-b border-white/10 select-none">
           <div className="flex items-center gap-2">
             <button
               onClick={() => {
@@ -176,7 +207,7 @@ Type 'help' to see available commands or click quick suggestions below.`
           </div>
 
           <div className="flex items-center gap-2 text-xs font-mono text-slate-400">
-            <TerminalIcon className="w-3.5 h-3.5 text-sky-400" />
+            <TerminalIcon className="w-3.5 h-3.5 text-cyan-400" />
             <span>akhil@system: ~ (zsh)</span>
           </div>
 
@@ -200,7 +231,7 @@ Type 'help' to see available commands or click quick suggestions below.`
         </div>
 
         {/* Quick Command Suggestions */}
-        <div className="px-4 py-2 bg-[#0d101a] border-b border-white/5 flex items-center gap-1.5 overflow-x-auto text-[11px] font-mono">
+        <div className="px-4 py-2 bg-[#0b1120] border-b border-white/5 flex items-center gap-1.5 overflow-x-auto text-[11px] font-mono">
           <span className="text-slate-500 shrink-0">Try:</span>
           {quickCommands.map((qc) => (
             <button
@@ -209,7 +240,7 @@ Type 'help' to see available commands or click quick suggestions below.`
                 e.stopPropagation();
                 executeCommand(qc);
               }}
-              className="px-2 py-0.5 rounded bg-white/5 hover:bg-sky-500/20 text-slate-300 hover:text-sky-300 border border-white/5 shrink-0 transition-colors"
+              className="px-2 py-0.5 rounded bg-white/5 hover:bg-cyan-500/20 text-slate-300 hover:text-cyan-300 border border-white/5 shrink-0 transition-colors"
             >
               {qc}
             </button>
@@ -220,22 +251,16 @@ Type 'help' to see available commands or click quick suggestions below.`
         <div className="flex-1 p-4 overflow-y-auto font-mono text-xs sm:text-sm space-y-3 leading-relaxed text-slate-200">
           {history.map((item) => (
             <div key={item.id} className="whitespace-pre-wrap">
-              {item.type === 'input' && (
-                <div className="text-sky-400 font-semibold">{item.content}</div>
-              )}
-              {item.type === 'output' && (
-                <div className="text-slate-300">{item.content}</div>
-              )}
-              {item.type === 'error' && (
-                <div className="text-rose-400">{item.content}</div>
-              )}
+              {item.type === 'input' && <div className="text-cyan-400 font-semibold">{item.content}</div>}
+              {item.type === 'output' && <div className="text-slate-300">{item.content}</div>}
+              {item.type === 'error' && <div className="text-rose-400">{item.content}</div>}
             </div>
           ))}
           <div ref={bottomRef} />
         </div>
 
         {/* Input Bar */}
-        <div className="p-3 bg-[#0d101a] border-t border-white/10 flex items-center gap-2">
+        <div className="p-3 bg-[#0b1120] border-t border-white/10 flex items-center gap-2">
           <span className="text-emerald-400 font-mono text-xs sm:text-sm font-bold pl-1">
             akhil@system:~$
           </span>
@@ -251,15 +276,13 @@ Type 'help' to see available commands or click quick suggestions below.`
           />
           <button
             onClick={() => executeCommand(input)}
-            className="p-1.5 rounded-lg bg-sky-500/20 hover:bg-sky-500/30 text-sky-300 transition-colors"
+            className="p-1.5 rounded-lg bg-cyan-500/20 hover:bg-cyan-500/30 text-cyan-300 transition-colors"
             title="Execute"
           >
             <CornerDownLeft className="w-3.5 h-3.5" />
           </button>
         </div>
-
       </div>
     </div>
   );
 };
-

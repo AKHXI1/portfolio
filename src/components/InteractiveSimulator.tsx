@@ -1,628 +1,400 @@
-import React, { useState, useEffect, useRef } from 'react';
-import { Play, Pause, Sparkles, Music, HandMetal, ArrowRight, Bot, Globe, ShieldCheck, Camera, Activity, Volume2, Eye, Disc3 } from 'lucide-react';
+import React, { useState } from 'react';
+import { motion, AnimatePresence } from 'framer-motion';
+import { Sparkles, Package, Palette, Layers, Eye } from 'lucide-react';
 import { playSound } from '../utils/sound';
+import { usePortfolioMode } from '../context/ModeContext';
+import { BrioShowcase } from './BrioShowcase';
+import { devProjects } from '../data/devProjects';
+import { ProjectModal } from './ProjectModal';
+import { DevProject } from '../types';
 
 export const InteractiveSimulator: React.FC = () => {
-  const [activeTab, setActiveTab] = useState<'verselens' | 'signsync'>('verselens');
+  const { isDev, mode } = usePortfolioMode();
+  const [brioModalOpen, setBrioModalOpen] = useState(false);
 
-  // VerseLens state
-  const sampleTracks = [
+  // Designer Mode Studio Lab State
+  const [designLabTab, setDesignLabTab] = useState<'kovax' | 'morph'>('kovax');
+  const [showCutLines, setShowCutLines] = useState(true);
+  const [showCreaseLines, setShowCreaseLines] = useState(true);
+  const [showBleed, setShowBleed] = useState(true);
+  const [activePaletteIdx, setActivePaletteIdx] = useState(0);
+
+  const brioProject: DevProject = devProjects[0];
+
+  const designPalettes = [
     {
-      id: 'suzume',
-      title: 'Suzume (すずめ)',
-      artist: 'RADWIMPS feat. Toaka',
-      language: 'Japanese',
-      originalLyric: '君の中に何があるのか知りたくて、僕は空を見上げていた。',
-      transliteration: 'Kimi no naka ni nani ga aru no ka shiritakute, boku wa sora wo miageteita.',
-      englishTranslation: 'Wanting to know what lies within you, I found myself looking up at the sky.',
-      aiMeaning: 'A poignant motif exploring human yearning and cosmic fate. The sky serves as an expansive mirror to the unknown emotional depths inside the beloved.',
-      culturalContext: 'In Japanese Shinto and poetic tradition, the sky (Sora) connects the terrestrial self with the spirit realm (Tokoyo), symbolizing unbounded longing.',
-      duration: '0:34',
-      accentColor: 'from-sky-500 to-indigo-600'
+      name: 'Kovax Coral Industrial',
+      bg: '#fff7f3',
+      ink: '#18181b',
+      primary: '#ff5c4d',
+      secondary: '#8b5cf6',
+      cmyk: 'C:0 M:75 Y:70 K:0',
+      fontLabel: 'Clash Display + JetBrains Mono',
+      sampleTitle: 'KOVAX PRO SERIES',
+      sampleSub: 'Structural Retail Packaging • Edition 04'
     },
     {
-      id: 'ditto',
-      title: 'Ditto',
-      artist: 'NewJeans',
-      language: 'Korean',
-      originalLyric: '내 하드는 이미 너로 가득 찼어, 기억해 날.',
-      transliteration: 'Nae hadeuneun imi neoro gadeuk chasseo, gieokhae nal.',
-      englishTranslation: 'My heart and mind are already filled with you, remember me.',
-      aiMeaning: 'The play on "hard drive / heart" represents youthful digital nostalgia and the vulnerability of longing to remain etched in someone’s memory forever.',
-      culturalContext: 'Embodies early 2000s Y2K retro-nostalgia, turning cold computing metaphors into tender expressions of warmth.',
-      duration: '0:42',
-      accentColor: 'from-purple-500 to-pink-600'
+      name: 'Royal Ivory & Plum Foil',
+      bg: '#fdf8f0',
+      ink: '#2d1b2e',
+      primary: '#9333ea',
+      secondary: '#d97706',
+      cmyk: 'C:45 M:85 Y:0 K:0',
+      fontLabel: 'Instrument Serif + Syne',
+      sampleTitle: 'J & A Suite',
+      sampleSub: 'Bespoke Wedding Stationery • Print Suite'
     },
     {
-      id: 'kesariya',
-      title: 'Kesariya',
-      artist: 'Arijit Singh',
-      language: 'Hindi',
-      originalLyric: 'केसरिया तेरा इश्क़ है पिया, रंग जाऊं जो मैं हाथ लगाऊं।',
-      transliteration: 'Kesariya tera ishq hai piya, rang jaaun jo main haath lagaaun.',
-      englishTranslation: 'Your love is like saffron, my beloved; if I even touch it, I become colored in it.',
-      aiMeaning: 'Saffron (Kesariya) represents auspiciousness, passionate devotion, and sacred royalty in Indian cultural poetics.',
-      culturalContext: 'In Indian classical and folk traditions, saffron dye signifies eternal commitment and spiritual surrender.',
-      duration: '0:39',
-      accentColor: 'from-amber-500 to-orange-600'
+      name: 'Electric Poster Studio',
+      bg: '#f5f3ff',
+      ink: '#1e1b4b',
+      primary: '#ec4899',
+      secondary: '#f97316',
+      cmyk: 'C:0 M:85 Y:30 K:0',
+      fontLabel: 'Syne Bold + Plus Jakarta Sans',
+      sampleTitle: 'KINETIC FORM 26',
+      sampleSub: 'A2 Risograph Exhibition Poster • Key Art'
     }
   ];
 
-  const [selectedTrackIndex, setSelectedTrackIndex] = useState(0);
-  const [isPlaying, setIsPlaying] = useState(true);
-  const [activeAnalysisTab, setActiveAnalysisTab] = useState<'poetic' | 'cultural' | 'phonetics'>('poetic');
-  const currentTrack = sampleTracks[selectedTrackIndex];
-
-  // Canvas visualizer for VerseLens audio wave
-  const canvasRef = useRef<HTMLCanvasElement | null>(null);
-
-  useEffect(() => {
-    if (activeTab !== 'verselens') return;
-    const canvas = canvasRef.current;
-    if (!canvas) return;
-    const ctx = canvas.getContext('2d');
-    if (!ctx) return;
-
-    let animId: number;
-    let phase = 0;
-
-    const renderWave = () => {
-      if (!canvas || !canvas.parentElement) return;
-      const w = (canvas.width = canvas.parentElement.clientWidth || 300);
-      const h = (canvas.height = 70);
-
-      ctx.clearRect(0, 0, w, h);
-
-      if (isPlaying) {
-        phase += 0.08;
-      }
-
-      // Draw active equalizer bars
-      const barCount = 36;
-      const barWidth = Math.max((w / barCount) - 3, 2);
-
-      for (let i = 0; i < barCount; i++) {
-        const heightMultiplier = isPlaying 
-          ? (Math.sin(phase + i * 0.35) * 0.5 + 0.5) * 0.7 + (Math.cos(phase * 0.7 + i * 0.2) * 0.3)
-          : 0.12;
-
-        const barHeight = Math.max(h * heightMultiplier, 4);
-        const x = i * (barWidth + 3);
-        const y = h - barHeight;
-
-        const grad = ctx.createLinearGradient(0, y, 0, h);
-        grad.addColorStop(0, '#38bdf8');
-        grad.addColorStop(0.5, '#818cf8');
-        grad.addColorStop(1, '#a855f7');
-
-        ctx.fillStyle = grad;
-        ctx.beginPath();
-        if (typeof ctx.roundRect === 'function') {
-          ctx.roundRect(x, y, barWidth, barHeight, 3);
-        } else {
-          ctx.rect(x, y, barWidth, barHeight);
-        }
-        ctx.fill();
-      }
-
-      animId = requestAnimationFrame(renderWave);
-    };
-
-    renderWave();
-
-    return () => cancelAnimationFrame(animId);
-  }, [activeTab, isPlaying]);
-
-  // SignSync state
-  const [inputWord, setInputWord] = useState('HELLO');
-  const [cameraMode, setCameraMode] = useState(true);
-  const [signResult, setSignResult] = useState<{
-    word: string;
-    gestureDesc: string;
-    handShape: string;
-    motion: string;
-    confidence: string;
-    activeNodes: number[];
-  }>({
-    word: 'HELLO',
-    gestureDesc: 'Right open hand touching forehead/temple with palm outward, then moving gently outward in a salute-like greeting.',
-    handShape: 'Open 5-hand / Flat B palm',
-    motion: 'Smooth outward diagonal wave (Salute gesture)',
-    confidence: '99.4%',
-    activeNodes: [0, 1, 2, 3, 4, 5, 8, 12, 16, 20]
-  });
-
-  const gestureDictionary: Record<string, { gestureDesc: string; handShape: string; motion: string; confidence: string; activeNodes: number[] }> = {
-    HELLO: {
-      gestureDesc: 'Right open hand touches near temple with palm outward, then moves forward and away in a friendly salute.',
-      handShape: 'Flat-B / Open 5',
-      motion: 'Outward salute wave',
-      confidence: '99.4%',
-      activeNodes: [0, 4, 8, 12, 16, 20]
-    },
-    THANKYOU: {
-      gestureDesc: 'Fingertips of flat right hand touch chin/lips, then extend outward and downward toward the recipient with a nod.',
-      handShape: 'Flat hand, fingers together',
-      motion: 'From chin extending forward',
-      confidence: '98.8%',
-      activeNodes: [0, 5, 8, 12, 16, 20]
-    },
-    'THANK YOU': {
-      gestureDesc: 'Fingertips of flat right hand touch chin/lips, then extend outward and downward toward the recipient with a nod.',
-      handShape: 'Flat hand, fingers together',
-      motion: 'From chin extending forward',
-      confidence: '98.8%',
-      activeNodes: [0, 5, 8, 12, 16, 20]
-    },
-    FRIEND: {
-      gestureDesc: 'Index fingers of both hands crook and interlock with each other, then reverse positions in mutual bond.',
-      handShape: 'Bent X index fingers',
-      motion: 'Interlocking clasp & flip',
-      confidence: '97.9%',
-      activeNodes: [0, 6, 8]
-    },
-    LOVE: {
-      gestureDesc: 'Both fists crossed over the chest over the heart, hugging close to the body in deep affection.',
-      handShape: 'S-fists or flat hands crossed',
-      motion: 'Cross over heart & squeeze',
-      confidence: '99.1%',
-      activeNodes: [0, 2, 4, 8, 12]
-    },
-    YES: {
-      gestureDesc: 'Right fist (S-hand) bobs up and down at wrist level, mimicking a nodding head agreement.',
-      handShape: 'S-hand (fist)',
-      motion: 'Vertical nodding tilt',
-      confidence: '98.5%',
-      activeNodes: [0, 4, 8]
-    },
-    NO: {
-      gestureDesc: 'Thumb, index, and middle finger snap together firmly like a closing mouth.',
-      handShape: '3-hand to pinched fingers',
-      motion: 'Rapid downward snap',
-      confidence: '99.0%',
-      activeNodes: [0, 4, 8, 12]
-    },
-    HELP: {
-      gestureDesc: 'Right thumbs-up fist placed onto flat upward palm of left hand, lifting upward together.',
-      handShape: 'Right A-hand on Left flat palm',
-      motion: 'Coordinated upward lift',
-      confidence: '98.2%',
-      activeNodes: [0, 4, 8, 12, 16, 20]
-    }
-  };
-
-  const handleTranslateSign = (w: string) => {
-    playSound('click');
-    const normalized = w.trim().toUpperCase();
-    setInputWord(w);
-    if (gestureDictionary[normalized]) {
-      setSignResult({
-        word: normalized,
-        ...gestureDictionary[normalized]
-      });
-    } else {
-      setSignResult({
-        word: normalized || 'WORD',
-        gestureDesc: `Fingerspelled sequence for "${normalized}": Translating individual alphanumeric alphabet hand poses sequentially across frames.`,
-        handShape: 'Dynamic Fingerspelling Mode',
-        motion: 'Sequential phoneme articulation',
-        confidence: '96.2%',
-        activeNodes: [0, 2, 4, 8, 12, 16, 20]
-      });
-    }
-  };
+  const activePalette = designPalettes[activePaletteIdx];
 
   return (
-    <section id="simulator" className="py-24 px-4 sm:px-6 lg:px-8 relative z-10">
-      <div className="max-w-6xl mx-auto">
-        
-        {/* Header */}
-        <div className="text-center mb-14">
-          <div className="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-full bg-cyan-500/10 border border-cyan-500/30 text-cyan-400 text-xs font-mono mb-4">
-            <Sparkles className="w-3.5 h-3.5" />
-            <span>Interactive Laboratory</span>
-          </div>
-          <h2 className="text-3xl sm:text-5xl font-display font-extrabold text-white tracking-tight mb-4">
-            Test <span className="text-gradient">Akhil's Engineering</span> in Real-Time
-          </h2>
-          <p className="max-w-2xl mx-auto text-slate-400 text-sm sm:text-base">
-            Live interactive sandboxes showing the exact mechanics behind VerseLens (AI Music Intelligence) and SignSync (Computer Vision Accessibility).
-          </p>
-
-          {/* Mode Switcher Tabs */}
-          <div className="inline-flex p-1.5 rounded-2xl bg-white/[0.04] border border-white/10 mt-8 backdrop-blur-xl shadow-glass-card">
-            <button
-              onClick={() => {
-                playSound('click');
-                setActiveTab('verselens');
-              }}
-              className={`flex items-center gap-2.5 px-6 py-3 rounded-xl text-xs sm:text-sm font-semibold transition-all duration-300 ${
-                activeTab === 'verselens'
-                  ? 'bg-gradient-to-r from-sky-500 to-indigo-600 text-white shadow-glow-cyan'
-                  : 'text-slate-400 hover:text-white hover:bg-white/5'
-              }`}
+    <section id="simulator" className="py-20 px-4 sm:px-6 lg:px-8 relative z-10">
+      <div className="max-w-7xl mx-auto">
+        <AnimatePresence mode="wait">
+          {isDev ? (
+            <motion.div
+              key="dev-featured-showcase"
+              initial={{ opacity: 0, y: 16 }}
+              animate={{ opacity: 1, y: 0 }}
+              exit={{ opacity: 0, y: -16 }}
+              transition={{ duration: 0.35 }}
             >
-              <Music className="w-4 h-4" />
-              <span>VerseLens (Spotify AI Lyrics)</span>
-            </button>
-
-            <button
-              onClick={() => {
-                playSound('click');
-                setActiveTab('signsync');
-              }}
-              className={`flex items-center gap-2.5 px-6 py-3 rounded-xl text-xs sm:text-sm font-semibold transition-all duration-300 ${
-                activeTab === 'signsync'
-                  ? 'bg-gradient-to-r from-emerald-500 to-teal-600 text-white shadow-lg shadow-emerald-500/30'
-                  : 'text-slate-400 hover:text-white hover:bg-white/5'
-              }`}
+              <BrioShowcase onOpenBrioModal={() => setBrioModalOpen(true)} />
+            </motion.div>
+          ) : (
+            <motion.div
+              key={`sim-design-${mode}`}
+              initial={{ opacity: 0, y: 16 }}
+              animate={{ opacity: 1, y: 0 }}
+              exit={{ opacity: 0, y: -16 }}
+              transition={{ duration: 0.35 }}
             >
-              <HandMetal className="w-4 h-4" />
-              <span>SignSync (Accessibility Engine)</span>
-            </button>
-          </div>
-        </div>
-
-        {/* Tab 1: VerseLens Simulator */}
-        {activeTab === 'verselens' && (
-          <div className="spotlight-card p-6 sm:p-8 rounded-3xl bg-[#080b14] border border-white/10 shadow-2xl">
-            
-            {/* Window Topbar */}
-            <div className="flex items-center justify-between pb-4 mb-6 border-b border-white/10">
-              <div className="flex items-center gap-2">
-                <div className="w-3 h-3 rounded-full bg-rose-500/80" />
-                <div className="w-3 h-3 rounded-full bg-amber-500/80" />
-                <div className="w-3 h-3 rounded-full bg-emerald-500/80" />
-                <span className="ml-3 font-mono text-xs text-slate-400 flex items-center gap-2">
-                  <Disc3 className="w-3.5 h-3.5 text-sky-400 animate-spin-slow" />
-                  VerseLens Spicetify / Chrome MV3 HUD [Live Telemetry]
-                </span>
-              </div>
-
-              <div className="flex items-center gap-2">
-                <span className="hidden sm:inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full text-[10px] font-mono bg-emerald-500/10 text-emerald-300 border border-emerald-500/30">
-                  <span className="w-1.5 h-1.5 rounded-full bg-emerald-400 animate-ping" />
-                  Gemini 1.5 Flash Connected
-                </span>
-              </div>
-            </div>
-
-            <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 items-start">
-              
-              {/* Left Column: Simulated Spotify Player */}
-              <div className="lg:col-span-5 bg-[#05070d] p-5 rounded-2xl border border-white/10 space-y-5">
-                
-                {/* Track Selector Buttons */}
-                <div className="space-y-2">
-                  <label className="text-[10px] font-mono uppercase tracking-widest text-slate-400 block">
-                    Choose Music Telemetry Source:
-                  </label>
-                  <div className="grid grid-cols-3 gap-2">
-                    {sampleTracks.map((t, idx) => (
-                      <button
-                        key={t.id}
-                        onClick={() => {
-                          playSound('click');
-                          setSelectedTrackIndex(idx);
-                        }}
-                        className={`p-2.5 rounded-xl text-left border text-xs transition-all ${
-                          selectedTrackIndex === idx
-                            ? 'bg-sky-500/20 border-sky-400 text-sky-200 shadow-sm shadow-sky-500/30'
-                            : 'bg-white/[0.02] border-white/5 text-slate-400 hover:bg-white/5 hover:text-white'
-                        }`}
-                      >
-                        <div className="font-bold truncate">{t.title}</div>
-                        <div className="text-[10px] text-slate-500">{t.language}</div>
-                      </button>
-                    ))}
-                  </div>
+              {/* Packaging Dieline Showcase Header */}
+              <div className="text-center mb-14">
+                <div className="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-full bg-[#ff5c4d]/10 border border-[#ff5c4d]/30 text-[#e64435] text-xs font-mono mb-4">
+                  <Sparkles className="w-3.5 h-3.5" />
+                  <span>Interactive Packaging &amp; Studio Showcase</span>
                 </div>
+                <h2 className="text-3xl sm:text-5xl font-editorial font-extrabold text-zinc-900 tracking-tight mb-4">
+                  Packaging <span className="text-gradient">Dielines &amp; Color</span> Lab
+                </h2>
+                <p className="max-w-2xl mx-auto text-zinc-600 text-sm sm:text-base">
+                  Toggle structural print layers on the Kovax packaging blueprint or test real-time editorial color &amp; typography pairings.
+                </p>
 
-                {/* Track Header Card */}
-                <div className="p-4 rounded-xl bg-white/[0.02] border border-white/5 flex items-center gap-4">
-                  <div className={`w-14 h-14 rounded-xl bg-gradient-to-tr ${currentTrack.accentColor} flex items-center justify-center text-white shadow-lg shrink-0`}>
-                    <Music className="w-7 h-7" />
-                  </div>
-                  <div className="overflow-hidden flex-1">
-                    <div className="font-bold text-white text-base truncate">{currentTrack.title}</div>
-                    <div className="text-xs text-slate-400 truncate">{currentTrack.artist}</div>
-                    <div className="text-[10px] font-mono text-sky-400 mt-0.5">Spotify Web Player Hooked</div>
-                  </div>
-                </div>
-
-                {/* Active Audio Visualizer Wave Canvas */}
-                <div className="space-y-1.5 bg-black/40 p-3 rounded-xl border border-white/5">
-                  <div className="flex items-center justify-between text-[10px] font-mono text-slate-400 mb-1">
-                    <span className="flex items-center gap-1.5 text-sky-400">
-                      <Activity className="w-3 h-3 animate-pulse" />
-                      Frequency Spectrum
-                    </span>
-                    <span>44.1 kHz • Stereo</span>
-                  </div>
-                  <canvas ref={canvasRef} className="w-full h-16 block rounded-lg" />
-                </div>
-
-                {/* Player Controls */}
-                <div className="flex items-center justify-between pt-1">
-                  <div className="text-[11px] font-mono text-slate-400">
-                    Sync: <span className="text-emerald-400 font-bold">LRC #08 (0:14)</span>
-                  </div>
+                <div className="inline-flex p-1.5 rounded-2xl bg-white border border-zinc-900/10 mt-8 shadow-editorial-card">
                   <button
                     onClick={() => {
                       playSound('click');
-                      setIsPlaying(!isPlaying);
+                      setDesignLabTab('kovax');
                     }}
-                    className="flex items-center gap-2 px-4 py-2 rounded-xl bg-emerald-500 hover:bg-emerald-400 text-black font-semibold text-xs transition-all active:scale-95 shadow-md shadow-emerald-500/20"
+                    className={`flex items-center gap-2.5 px-6 py-3 rounded-xl text-xs sm:text-sm font-semibold transition-all duration-300 ${
+                      designLabTab === 'kovax'
+                        ? 'bg-gradient-to-r from-[#ff5c4d] to-purple-600 text-white shadow-glow-coral'
+                        : 'text-zinc-600 hover:text-zinc-900 hover:bg-zinc-100'
+                    }`}
                   >
-                    {isPlaying ? <Pause className="w-3.5 h-3.5 fill-current" /> : <Play className="w-3.5 h-3.5 fill-current" />}
-                    <span>{isPlaying ? 'Pause Sync' : 'Resume Playback'}</span>
+                    <Package className="w-4 h-4" />
+                    <span>Kovax Dieline Inspector</span>
+                  </button>
+
+                  <button
+                    onClick={() => {
+                      playSound('click');
+                      setDesignLabTab('morph');
+                    }}
+                    className={`flex items-center gap-2.5 px-6 py-3 rounded-xl text-xs sm:text-sm font-semibold transition-all duration-300 ${
+                      designLabTab === 'morph'
+                        ? 'bg-gradient-to-r from-purple-600 to-[#ff5c4d] text-white shadow-glow-coral'
+                        : 'text-zinc-600 hover:text-zinc-900 hover:bg-zinc-100'
+                    }`}
+                  >
+                    <Palette className="w-4 h-4" />
+                    <span>Color &amp; Type Morph Studio</span>
                   </button>
                 </div>
-
               </div>
 
-              {/* Right Column: VerseLens AI Overlay & Explanations */}
-              <div className="lg:col-span-7 space-y-5">
-                
-                {/* Active Lyric Display Card */}
-                <div className="p-6 rounded-2xl bg-white/[0.02] border border-white/10 space-y-4">
-                  <div className="flex items-center justify-between">
-                    <span className="text-[11px] font-mono uppercase tracking-wider text-slate-400 flex items-center gap-2">
-                      <span className="w-2 h-2 rounded-full bg-sky-400 animate-pulse" />
-                      Original Lyrics ({currentTrack.language})
-                    </span>
-                    <span className="text-[10px] font-mono px-2 py-0.5 rounded bg-sky-500/10 text-sky-300 border border-sky-500/20">
-                      Line #8 of 24
-                    </span>
-                  </div>
-
-                  <p className="text-xl sm:text-2xl font-bold text-sky-200 leading-snug">
-                    "{currentTrack.originalLyric}"
-                  </p>
-
-                  {/* Transliteration Guide */}
-                  <div className="pt-3 border-t border-white/5 space-y-1">
-                    <span className="text-[11px] font-mono uppercase tracking-wider text-purple-400 font-semibold">
-                      Phonetic Romanization (Sing-Along Mode)
-                    </span>
-                    <p className="text-sm font-mono text-purple-200 italic">
-                      {currentTrack.transliteration}
-                    </p>
-                  </div>
-
-                  {/* English Translation */}
-                  <div className="pt-3 border-t border-white/5 space-y-1">
-                    <span className="text-[11px] font-mono uppercase tracking-wider text-emerald-400 font-semibold">
-                      Direct English Translation
-                    </span>
-                    <p className="text-sm text-slate-200">
-                      {currentTrack.englishTranslation}
-                    </p>
-                  </div>
-                </div>
-
-                {/* Gemini AI Deep Dive Multi-Tab Box */}
-                <div className="p-5 rounded-2xl bg-gradient-to-br from-[#0c0f1d] to-[#121626] border border-sky-500/20 space-y-3">
-                  <div className="flex items-center justify-between border-b border-white/10 pb-3">
-                    <div className="flex items-center gap-2">
-                      <Bot className="w-4 h-4 text-sky-400" />
-                      <span className="text-xs font-bold font-mono text-white">
-                        Google Gemini 1.5 Flash Analysis
-                      </span>
+              {designLabTab === 'kovax' ? (
+                <div className="spotlight-card p-6 sm:p-8 rounded-3xl">
+                  <div className="flex flex-wrap items-center justify-between gap-3 pb-4 mb-6 border-b border-zinc-900/10">
+                    <div className="flex items-center gap-2 font-mono text-xs text-zinc-700 font-semibold">
+                      <Layers className="w-4 h-4 text-[#ff5c4d]" />
+                      <span>KOVAX_BOX_DIELINE_V3.AI — 1:1 STRUCTURAL PRE-PRESS</span>
                     </div>
-
-                    <div className="flex gap-1">
-                      <button
-                        onClick={() => {
-                          playSound('click');
-                          setActiveAnalysisTab('poetic');
-                        }}
-                        className={`px-2.5 py-1 rounded-lg text-[10px] font-mono font-medium border transition-colors ${
-                          activeAnalysisTab === 'poetic'
-                            ? 'bg-sky-500/20 border-sky-400 text-sky-200'
-                            : 'bg-white/5 border-white/5 text-slate-400'
-                        }`}
-                      >
-                        Poetic Meaning
-                      </button>
-                      <button
-                        onClick={() => {
-                          playSound('click');
-                          setActiveAnalysisTab('cultural');
-                        }}
-                        className={`px-2.5 py-1 rounded-lg text-[10px] font-mono font-medium border transition-colors ${
-                          activeAnalysisTab === 'cultural'
-                            ? 'bg-purple-500/20 border-purple-400 text-purple-200'
-                            : 'bg-white/5 border-white/5 text-slate-400'
-                        }`}
-                      >
-                        Cultural Context
-                      </button>
-                    </div>
+                    <span className="px-2.5 py-1 rounded-full text-[10px] font-mono bg-[#ff5c4d]/10 text-[#e64435] border border-[#ff5c4d]/25 font-bold">
+                      300 DPI • CMYK + SPOT UV
+                    </span>
                   </div>
 
-                  <p className="text-xs sm:text-sm text-slate-300 leading-relaxed italic">
-                    "{activeAnalysisTab === 'poetic' ? currentTrack.aiMeaning : currentTrack.culturalContext}"
-                  </p>
-                </div>
+                  <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 items-center">
+                    <div className="lg:col-span-4 space-y-4">
+                      <div className="p-4 rounded-2xl bg-[#faf6f0] border border-zinc-900/10 space-y-3">
+                        <div className="text-[11px] font-mono uppercase tracking-wider text-zinc-500 font-bold">
+                          Toggle Vector Print Plates
+                        </div>
 
-                <div className="flex items-center justify-between text-xs font-mono text-slate-500 pt-1">
-                  <span>⚡ Sub-50ms Translation Latency</span>
-                  <span>🔒 Sandboxed MV3 Worker</span>
-                  <a
-                    href="#projects"
-                    onClick={() => playSound('click')}
-                    className="text-sky-400 hover:text-sky-300 inline-flex items-center gap-1 font-semibold"
-                  >
-                    Inspect Extension Architecture <ArrowRight className="w-3 h-3" />
-                  </a>
-                </div>
+                        <button
+                          onClick={() => {
+                            playSound('click');
+                            setShowCutLines(!showCutLines);
+                          }}
+                          className={`w-full flex items-center justify-between px-3.5 py-2.5 rounded-xl border text-xs font-mono transition-all ${
+                            showCutLines
+                              ? 'bg-[#ff5c4d]/10 border-[#ff5c4d]/50 text-[#e64435] font-bold'
+                              : 'bg-white border-zinc-200 text-zinc-500'
+                          }`}
+                        >
+                          <span className="flex items-center gap-2">
+                            <span className="w-3 h-0.5 bg-[#ff5c4d]" />
+                            Cut Die (Solid)
+                          </span>
+                          <Eye className="w-3.5 h-3.5" />
+                        </button>
 
-              </div>
+                        <button
+                          onClick={() => {
+                            playSound('click');
+                            setShowCreaseLines(!showCreaseLines);
+                          }}
+                          className={`w-full flex items-center justify-between px-3.5 py-2.5 rounded-xl border text-xs font-mono transition-all ${
+                            showCreaseLines
+                              ? 'bg-purple-500/10 border-purple-500/50 text-purple-700 font-bold'
+                              : 'bg-white border-zinc-200 text-zinc-500'
+                          }`}
+                        >
+                          <span className="flex items-center gap-2">
+                            <span className="w-3 h-0.5 border-b-2 border-dashed border-purple-600" />
+                            Crease / Fold (Dashed)
+                          </span>
+                          <Eye className="w-3.5 h-3.5" />
+                        </button>
 
-            </div>
-          </div>
-        )}
+                        <button
+                          onClick={() => {
+                            playSound('click');
+                            setShowBleed(!showBleed);
+                          }}
+                          className={`w-full flex items-center justify-between px-3.5 py-2.5 rounded-xl border text-xs font-mono transition-all ${
+                            showBleed
+                              ? 'bg-amber-500/10 border-amber-500/50 text-amber-800 font-bold'
+                              : 'bg-white border-zinc-200 text-zinc-500'
+                          }`}
+                        >
+                          <span className="flex items-center gap-2">
+                            <span className="w-3 h-3 rounded-sm border border-amber-500 bg-amber-400/20" />
+                            3mm Print Bleed Margin
+                          </span>
+                          <Eye className="w-3.5 h-3.5" />
+                        </button>
+                      </div>
 
-        {/* Tab 2: SignSync Simulator */}
-        {activeTab === 'signsync' && (
-          <div className="spotlight-card p-6 sm:p-8 rounded-3xl bg-[#080b14] border border-white/10 shadow-2xl">
-            
-            {/* Topbar */}
-            <div className="flex items-center justify-between pb-4 mb-6 border-b border-white/10">
-              <div className="flex items-center gap-2">
-                <div className="w-3 h-3 rounded-full bg-emerald-500/80 animate-ping" />
-                <span className="font-mono text-xs text-emerald-400 font-semibold tracking-wider">
-                  SIGNSYNC CROSS-PLATFORM MOBILE ENGINE (FLUTTER)
-                </span>
-              </div>
-              <button
-                onClick={() => {
-                  playSound('click');
-                  setCameraMode(!cameraMode);
-                }}
-                className="px-3 py-1 rounded-full text-xs font-mono bg-white/5 border border-white/10 text-slate-300 hover:text-white flex items-center gap-1.5 transition-colors"
-              >
-                <Camera className="w-3.5 h-3.5 text-emerald-400" />
-                <span>{cameraMode ? 'Vision Mesh ON' : 'Vision Mesh OFF'}</span>
-              </button>
-            </div>
-
-            <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 items-start">
-              
-              {/* Left Column: Word Presets & Input */}
-              <div className="lg:col-span-5 bg-[#05070d] p-5 rounded-2xl border border-white/10 space-y-5">
-                <div className="space-y-2">
-                  <label className="text-xs font-semibold text-white">
-                    Translate Word to Sign Kinematics:
-                  </label>
-                  <input
-                    type="text"
-                    value={inputWord}
-                    onChange={(e) => handleTranslateSign(e.target.value)}
-                    placeholder="Type a word..."
-                    className="w-full px-4 py-2.5 rounded-xl bg-white/5 border border-white/10 text-white font-mono text-sm focus:outline-none focus:border-emerald-400 transition-colors"
-                  />
-                </div>
-
-                {/* Preset Chips */}
-                <div className="space-y-2">
-                  <span className="text-[10px] font-mono uppercase tracking-wider text-slate-400 block">
-                    Quick Vocabulary Presets:
-                  </span>
-                  <div className="flex flex-wrap gap-1.5">
-                    {['HELLO', 'THANK YOU', 'FRIEND', 'LOVE', 'HELP', 'YES', 'NO'].map((w) => (
-                      <button
-                        key={w}
-                        onClick={() => handleTranslateSign(w)}
-                        className={`px-3 py-1 rounded-xl text-xs font-mono border transition-all ${
-                          inputWord.toUpperCase() === w
-                            ? 'bg-emerald-500/20 border-emerald-400 text-emerald-300 shadow-sm shadow-emerald-500/20'
-                            : 'bg-white/[0.02] border-white/5 text-slate-400 hover:bg-white/5 hover:text-white'
-                        }`}
-                      >
-                        {w}
-                      </button>
-                    ))}
-                  </div>
-                </div>
-
-                <div className="p-4 rounded-xl bg-white/[0.02] border border-white/5 space-y-2 text-xs font-mono text-slate-400">
-                  <div className="flex items-center justify-between text-slate-300">
-                    <span>Vision Confidence:</span>
-                    <span className="text-emerald-400 font-bold">{signResult.confidence}</span>
-                  </div>
-                  <div className="flex items-center justify-between text-slate-300">
-                    <span>Frame Rate:</span>
-                    <span className="text-sky-400">60 FPS Native Stream</span>
-                  </div>
-                  <div className="flex items-center justify-between text-slate-300">
-                    <span>Target Language:</span>
-                    <span className="text-slate-200">ASL / ISL Standard</span>
-                  </div>
-                </div>
-
-              </div>
-
-              {/* Right Column: Dynamic Skeletal Hand Visualizer */}
-              <div className="lg:col-span-7 space-y-5">
-                
-                {/* Visualizer Stage */}
-                <div className="p-6 rounded-2xl bg-gradient-to-b from-[#0a0e1a] to-[#060810] border border-white/10 text-center relative overflow-hidden">
-                  
-                  {/* Subtle Grid backdrop */}
-                  <div className="absolute inset-0 cyber-dots opacity-30 pointer-events-none" />
-
-                  {/* Simulated Vision Tracking Mesh Canvas / SVG */}
-                  <div className="relative z-10 flex flex-col items-center py-6">
-                    <div className="relative w-36 h-36 flex items-center justify-center mb-4">
-                      {/* Radar sweep */}
-                      <div className="absolute inset-0 rounded-full border border-emerald-500/30 animate-ping opacity-25" />
-                      <div className="absolute inset-2 rounded-full border border-dashed border-emerald-500/40 animate-spin-slow" />
-                      
-                      <div className="w-24 h-24 rounded-full bg-emerald-500/15 border border-emerald-500/40 flex items-center justify-center text-emerald-400 shadow-lg shadow-emerald-500/20">
-                        <HandMetal className="w-12 h-12" />
+                      <div className="p-4 rounded-2xl bg-white border border-zinc-900/10 text-xs space-y-1.5">
+                        <div className="font-mono text-[10px] uppercase text-zinc-400">Packaging Specs</div>
+                        <div className="flex justify-between font-mono text-zinc-700">
+                          <span>Dimensions:</span>
+                          <span className="font-bold">140 × 90 × 45 mm</span>
+                        </div>
+                        <div className="flex justify-between font-mono text-zinc-700">
+                          <span>Stock:</span>
+                          <span className="font-bold">350gsm Matte SBS</span>
+                        </div>
+                        <div className="flex justify-between font-mono text-zinc-700">
+                          <span>Finish:</span>
+                          <span className="font-bold text-[#ff5c4d]">Spot UV Logo</span>
+                        </div>
                       </div>
                     </div>
 
-                    <div className="font-display font-bold text-2xl text-white">
-                      "{signResult.word}"
-                    </div>
-                    <div className="text-xs font-mono text-emerald-400 mt-1">
-                      Hand Shape: {signResult.handShape}
+                    <div className="lg:col-span-8 p-6 rounded-2xl bg-[#fbf7f2] border border-zinc-900/10 relative overflow-hidden">
+                      <div className="absolute inset-0 artistic-grid opacity-80 pointer-events-none" />
+                      <svg
+                        viewBox="0 0 640 340"
+                        className="w-full h-auto relative z-10 drop-shadow-sm"
+                        aria-label="Kovax Structural Packaging Dieline Blueprint"
+                      >
+                        {showBleed && (
+                          <rect
+                            x="60"
+                            y="30"
+                            width="520"
+                            height="280"
+                            rx="6"
+                            fill="rgba(245, 158, 11, 0.08)"
+                            stroke="#f59e0b"
+                            strokeWidth="1.2"
+                            strokeDasharray="3 3"
+                          />
+                        )}
+
+                        <g>
+                          <path
+                            d="M 190 95 L 195 50 Q 197 42 205 42 L 315 42 Q 323 42 325 50 L 330 95"
+                            fill="rgba(255,92,77,0.06)"
+                            stroke={showCutLines ? '#ff5c4d' : 'transparent'}
+                            strokeWidth="2"
+                          />
+                          <path
+                            d="M 85 95 L 100 58 L 180 58 L 190 95"
+                            fill="rgba(139,92,246,0.05)"
+                            stroke={showCutLines ? '#ff5c4d' : 'transparent'}
+                            strokeWidth="2"
+                          />
+                          <path
+                            d="M 330 95 L 340 58 L 420 58 L 435 95"
+                            fill="rgba(139,92,246,0.05)"
+                            stroke={showCutLines ? '#ff5c4d' : 'transparent'}
+                            strokeWidth="2"
+                          />
+                          <rect
+                            x="85"
+                            y="95"
+                            width="470"
+                            height="150"
+                            fill="rgba(255,255,255,0.75)"
+                            stroke={showCutLines ? '#ff5c4d' : 'transparent'}
+                            strokeWidth="2"
+                          />
+                          <path
+                            d="M 555 95 L 580 110 L 580 230 L 555 245"
+                            fill="rgba(255,92,77,0.08)"
+                            stroke={showCutLines ? '#ff5c4d' : 'transparent'}
+                            strokeWidth="2"
+                          />
+                          <path
+                            d="M 190 245 L 198 295 L 322 295 L 330 245"
+                            fill="rgba(255,92,77,0.06)"
+                            stroke={showCutLines ? '#ff5c4d' : 'transparent'}
+                            strokeWidth="2"
+                          />
+                        </g>
+
+                        {showCreaseLines && (
+                          <g stroke="#7c3aed" strokeWidth="1.8" strokeDasharray="6 4">
+                            <line x1="190" y1="95" x2="190" y2="245" />
+                            <line x1="330" y1="95" x2="330" y2="245" />
+                            <line x1="435" y1="95" x2="435" y2="245" />
+                            <line x1="555" y1="95" x2="555" y2="245" />
+                            <line x1="85" y1="95" x2="555" y2="95" />
+                            <line x1="85" y1="245" x2="555" y2="245" />
+                          </g>
+                        )}
+
+                        <g transform="translate(205, 130)">
+                          <rect x="0" y="0" width="110" height="80" rx="10" fill="#18181b" />
+                          <text x="55" y="42" textAnchor="middle" fill="#ffffff" fontSize="16" fontWeight="800" fontFamily="Syne, sans-serif">
+                            KOVAX
+                          </text>
+                          <text x="55" y="60" textAnchor="middle" fill="#ff5c4d" fontSize="8" fontFamily="JetBrains Mono, monospace">
+                            SERIES 01 • PRO
+                          </text>
+                        </g>
+
+                        <text x="137" y="175" textAnchor="middle" fill="#71717a" fontSize="10" fontFamily="JetBrains Mono, monospace">
+                          SIDE A (45mm)
+                        </text>
+                        <text x="382" y="175" textAnchor="middle" fill="#71717a" fontSize="10" fontFamily="JetBrains Mono, monospace">
+                          SIDE B (45mm)
+                        </text>
+                        <text x="495" y="175" textAnchor="middle" fill="#71717a" fontSize="10" fontFamily="JetBrains Mono, monospace">
+                          BACK (90mm)
+                        </text>
+                      </svg>
                     </div>
                   </div>
-
-                  {/* Motion Vector Details */}
-                  <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 text-left pt-2 border-t border-white/5">
-                    <div className="p-3.5 rounded-xl bg-white/[0.02] border border-white/5">
-                      <span className="text-[10px] font-mono uppercase text-slate-500 block mb-1">
-                        Motion Trajectory
-                      </span>
-                      <p className="text-xs font-medium text-slate-200">
-                        {signResult.motion}
-                      </p>
-                    </div>
-
-                    <div className="p-3.5 rounded-xl bg-white/[0.02] border border-white/5">
-                      <span className="text-[10px] font-mono uppercase text-slate-500 block mb-1">
-                        Kinematics Breakdown
-                      </span>
-                      <p className="text-xs font-medium text-emerald-300">
-                        High Contrast Tactile Landmark Mapping
-                      </p>
-                    </div>
-                  </div>
-
-                  <div className="mt-3 p-3.5 rounded-xl bg-white/[0.02] border border-white/5 text-left">
-                    <span className="text-[10px] font-mono uppercase text-slate-500 block mb-1">
-                      Gesture Kinematics
-                    </span>
-                    <p className="text-xs text-slate-300 leading-relaxed">
-                      {signResult.gestureDesc}
-                    </p>
-                  </div>
-
                 </div>
+              ) : (
+                <div className="spotlight-card p-6 sm:p-8 rounded-3xl">
+                  <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 items-center">
+                    <div className="lg:col-span-5 space-y-3">
+                      <div className="text-xs font-mono uppercase tracking-wider text-zinc-500 font-bold mb-2">
+                        Select Visual Direction
+                      </div>
+                      {designPalettes.map((pal, idx) => (
+                        <button
+                          key={pal.name}
+                          onClick={() => {
+                            playSound('click');
+                            setActivePaletteIdx(idx);
+                          }}
+                          className={`w-full p-4 rounded-2xl border text-left transition-all flex items-center justify-between ${
+                            activePaletteIdx === idx
+                              ? 'bg-[#faf6f0] border-[#ff5c4d] shadow-md'
+                              : 'bg-white border-zinc-900/10 hover:border-zinc-900/25'
+                          }`}
+                        >
+                          <div>
+                            <div className="font-bold text-sm text-zinc-900">{pal.name}</div>
+                            <div className="text-[11px] font-mono text-zinc-500">{pal.fontLabel}</div>
+                          </div>
+                          <div className="flex items-center gap-1">
+                            <span className="w-4 h-4 rounded-full" style={{ backgroundColor: pal.primary }} />
+                            <span className="w-4 h-4 rounded-full" style={{ backgroundColor: pal.secondary }} />
+                          </div>
+                        </button>
+                      ))}
+                    </div>
 
-                <div className="flex items-center justify-between text-xs font-mono text-slate-500 pt-1">
-                  <span>Flutter 3.x • Provider State</span>
-                  <a
-                    href="#projects"
-                    onClick={() => playSound('click')}
-                    className="text-emerald-400 hover:text-emerald-300 inline-flex items-center gap-1 font-semibold"
-                  >
-                    Inspect Mobile Architecture <ArrowRight className="w-3 h-3" />
-                  </a>
+                    <div className="lg:col-span-7">
+                      <motion.div
+                        key={activePalette.name}
+                        initial={{ opacity: 0.5, scale: 0.98 }}
+                        animate={{ opacity: 1, scale: 1 }}
+                        transition={{ duration: 0.4 }}
+                        style={{ backgroundColor: activePalette.bg, color: activePalette.ink }}
+                        className="p-8 sm:p-10 rounded-3xl border border-zinc-900/10 shadow-lg space-y-6 transition-colors duration-500"
+                      >
+                        <div className="flex items-center justify-between text-[11px] font-mono opacity-75">
+                          <span>LIVE COLOR MORPH PREVIEW</span>
+                          <span>{activePalette.cmyk}</span>
+                        </div>
+                        <h3 className="text-3xl sm:text-5xl font-editorial font-bold tracking-tight leading-none">
+                          {activePalette.sampleTitle}
+                        </h3>
+                        <p className="font-serif italic text-xl opacity-85">
+                          {activePalette.sampleSub}
+                        </p>
+                        <div className="flex flex-wrap gap-3 pt-2">
+                          <span
+                            className="px-4 py-2 rounded-full text-xs font-semibold text-white"
+                            style={{ backgroundColor: activePalette.primary }}
+                          >
+                            Primary Accent
+                          </span>
+                          <span
+                            className="px-4 py-2 rounded-full text-xs font-semibold text-white"
+                            style={{ backgroundColor: activePalette.secondary }}
+                          >
+                            Secondary Accent
+                          </span>
+                        </div>
+                      </motion.div>
+                    </div>
+                  </div>
                 </div>
-
-              </div>
-
-            </div>
-          </div>
-        )}
-
+              )}
+            </motion.div>
+          )}
+        </AnimatePresence>
       </div>
+
+      {/* Brio 3-Tab Wizard Modal */}
+      <ProjectModal
+        project={brioModalOpen ? brioProject : null}
+        onClose={() => setBrioModalOpen(false)}
+      />
     </section>
   );
 };
