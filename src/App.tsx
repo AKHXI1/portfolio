@@ -80,7 +80,7 @@ const PortfolioContent: React.FC = () => {
         <ContactSection />
       </main>
 
-      <Footer onOpenTerminal={() => setTerminalOpen(true)} />
+      <Footer />
 
       <InteractiveTerminal
         isOpen={terminalOpen}

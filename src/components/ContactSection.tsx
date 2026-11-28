@@ -1,5 +1,5 @@
-import React, { useState, useEffect } from 'react';
-import { Mail, Copy, Check, Send, Sparkles, Clock, Globe, ArrowUpRight } from 'lucide-react';
+import React, { useState, useEffect, useRef } from 'react';
+import { Mail, Copy, Check, Send, Sparkles, Clock, Globe, ArrowUpRight, MessageCircle } from 'lucide-react';
 import confetti from 'canvas-confetti';
 import { PERSONAL_INFO } from '../data/portfolioData';
 import { playSound } from '../utils/sound';
@@ -18,6 +18,7 @@ export const ContactSection: React.FC = () => {
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [submitted, setSubmitted] = useState(false);
   const [localTime, setLocalTime] = useState('');
+  const formRef = useRef<HTMLFormElement>(null);
 
   const devTopics = [
     'Odoo ERP Customization',
@@ -80,6 +81,23 @@ export const ContactSection: React.FC = () => {
     setTimeout(() => setCopied(false), 2500);
   };
 
+  const buildFormattedMessage = () =>
+    `Topic: ${selectedTopic}\nName: ${formData.name}\nEmail: ${formData.email}\n\n${formData.message}`;
+
+  const triggerSuccessFeedback = () => {
+    setIsSubmitting(false);
+    setSubmitted(true);
+    playSound('success');
+    confetti({
+      particleCount: 100,
+      spread: 85,
+      origin: { y: 0.6 },
+      colors: isDev
+        ? ['#00f0ff', '#10b981', '#38bdf8', '#34d399']
+        : ['#ff5c4d', '#8b5cf6', '#f97316', '#ec4899']
+    });
+  };
+
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
     if (!formData.name || !formData.email || !formData.message) return;
@@ -87,19 +105,22 @@ export const ContactSection: React.FC = () => {
     setIsSubmitting(true);
     playSound('click');
 
-    setTimeout(() => {
-      setIsSubmitting(false);
-      setSubmitted(true);
-      playSound('success');
-      confetti({
-        particleCount: 100,
-        spread: 85,
-        origin: { y: 0.6 },
-        colors: isDev
-          ? ['#00f0ff', '#10b981', '#38bdf8', '#34d399']
-          : ['#ff5c4d', '#8b5cf6', '#f97316', '#ec4899']
-      });
-    }, 1000);
+    const subject = `[Portfolio] ${selectedTopic} — ${formData.name}`;
+    const mailtoUrl = `mailto:${PERSONAL_INFO.email}?subject=${encodeURIComponent(subject)}&body=${encodeURIComponent(
+      buildFormattedMessage()
+    )}`;
+
+    window.location.href = mailtoUrl;
+    triggerSuccessFeedback();
+  };
+
+  const handleWhatsAppSend = () => {
+    if (formRef.current && !formRef.current.reportValidity()) return;
+
+    playSound('click');
+    const whatsappUrl = `${PERSONAL_INFO.whatsapp}?text=${encodeURIComponent(buildFormattedMessage())}`;
+    window.open(whatsappUrl, '_blank', 'noopener,noreferrer');
+    triggerSuccessFeedback();
   };
 
   return (
@@ -315,11 +336,11 @@ export const ContactSection: React.FC = () => {
                     <Check className="w-8 h-8" />
                   </div>
                   <h3 className={`text-2xl font-bold ${isDev ? 'font-mono text-white' : 'font-editorial text-zinc-900'}`}>
-                    {isDev ? 'Transmission Encrypted & Dispatched!' : 'Creative Brief Received!'}
+                    {isDev ? 'Draft Ready in Your App!' : 'Creative Brief Ready!'}
                   </h3>
                   <p className={`text-sm max-w-md mx-auto ${isDev ? 'text-slate-300' : 'text-zinc-600'}`}>
-                    Thank you for reaching out, <span className="font-semibold">{formData.name}</span>. I have received your inquiry on{' '}
-                    <span className="font-semibold">{selectedTopic}</span> and will respond within 24 hours.
+                    Thank you, <span className="font-semibold">{formData.name}</span>. Your message on{' '}
+                    <span className="font-semibold">{selectedTopic}</span> has been pre-filled—just hit send in your email app or WhatsApp to deliver it.
                   </p>
                   <button
                     onClick={() => {
@@ -336,7 +357,7 @@ export const ContactSection: React.FC = () => {
                   </button>
                 </div>
               ) : (
-                <form onSubmit={handleSubmit} className="space-y-6">
+                <form ref={formRef} onSubmit={handleSubmit} className="space-y-6">
                   <div className="space-y-2.5">
                     <label className={`text-xs font-mono uppercase tracking-wider ${isDev ? 'text-slate-400' : 'text-zinc-500'}`}>
                       What is the primary topic of your message?
@@ -426,26 +447,41 @@ export const ContactSection: React.FC = () => {
                     />
                   </div>
 
-                  <button
-                    type="submit"
-                    disabled={isSubmitting}
-                    className={`w-full py-4 rounded-2xl font-bold text-sm hover:scale-[1.01] active:scale-[0.99] transition-all flex items-center justify-center gap-2 group disabled:opacity-50 ${
-                      isDev
-                        ? 'bg-gradient-to-r from-cyan-500 via-teal-500 to-emerald-500 text-slate-950 shadow-glow-cyan'
-                        : 'bg-gradient-to-r from-[#ff5c4d] via-rose-500 to-purple-600 text-white shadow-glow-coral'
-                    }`}
-                  >
-                    {isSubmitting ? (
-                      <span className="font-mono text-xs animate-pulse">
-                        {isDev ? 'Encrypting & Dispatching...' : 'Sending Creative Brief...'}
-                      </span>
-                    ) : (
-                      <>
-                        <span>{isDev ? 'Transmit Message' : 'Send Creative Brief'}</span>
-                        <Send className="w-4 h-4 transition-transform group-hover:translate-x-1" />
-                      </>
-                    )}
-                  </button>
+                  <div className="flex flex-col sm:flex-row gap-3">
+                    <button
+                      type="submit"
+                      disabled={isSubmitting}
+                      className={`flex-1 py-4 px-5 rounded-2xl font-bold text-sm hover:scale-[1.01] active:scale-[0.99] transition-all flex items-center justify-center gap-2 group disabled:opacity-50 ${
+                        isDev
+                          ? 'bg-gradient-to-r from-cyan-500 via-teal-500 to-emerald-500 text-slate-950 shadow-glow-cyan'
+                          : 'bg-gradient-to-r from-[#ff5c4d] via-rose-500 to-purple-600 text-white shadow-glow-coral'
+                      }`}
+                    >
+                      {isSubmitting ? (
+                        <span className="font-mono text-xs animate-pulse">
+                          {isDev ? 'Opening Email App...' : 'Opening Email App...'}
+                        </span>
+                      ) : (
+                        <>
+                          <span>{isDev ? 'Send via Email' : 'Send Creative Brief'}</span>
+                          <Send className="w-4 h-4 transition-transform group-hover:translate-x-1" />
+                        </>
+                      )}
+                    </button>
+
+                    <button
+                      type="button"
+                      onClick={handleWhatsAppSend}
+                      className={`sm:w-auto py-4 px-6 rounded-2xl font-bold text-sm border hover:scale-[1.01] active:scale-[0.99] transition-all flex items-center justify-center gap-2 ${
+                        isDev
+                          ? 'bg-emerald-500/15 hover:bg-emerald-500/25 border-emerald-400/40 text-emerald-300'
+                          : 'bg-emerald-50 hover:bg-emerald-100 border-emerald-500/30 text-emerald-700'
+                      }`}
+                    >
+                      <MessageCircle className="w-4 h-4" />
+                      <span>WhatsApp</span>
+                    </button>
+                  </div>
                 </form>
               )}
             </div>

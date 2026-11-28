@@ -6,7 +6,7 @@ import {
   Eye,
   Activity,
   Sparkles,
-  HandMetal,
+  Briefcase,
   Music,
   Play,
   Pause,
@@ -67,11 +67,31 @@ const BRIO_STATES: Record<
   }
 };
 
-const MINI_SIGNS: Record<string, { pose: string; conf: string }> = {
-  HELLO: { pose: 'Open 5-hand outward salute wave', conf: '99.4%' },
-  'THANK YOU': { pose: 'Flat hand extending forward from chin', conf: '98.9%' },
-  HELP: { pose: 'Closed A-hand lifted on flat palm', conf: '98.5%' },
-  FRIEND: { pose: 'Interlocking bent index fingers', conf: '97.8%' }
+const PINGHR_MODES: Record<string, { outputLabel: string; detail: string; badge: string; status: string }> = {
+  MATCH: {
+    outputLabel: 'Dynamic Resume & GitHub Match',
+    detail: 'Scored Python, FastAPI & PostgreSQL across 20 job boards & Kerala tech parks',
+    badge: '94% FIT',
+    status: '20 BOARDS'
+  },
+  ATS: {
+    outputLabel: 'ATS Parseability & Keyword Audit',
+    detail: 'PDF/DOCX structure verified • 12/14 target JD keywords matched',
+    badge: '88/100',
+    status: 'ATS READY'
+  },
+  GUARD: {
+    outputLabel: 'Deliverability & Vault Status',
+    detail: 'DNS MX check passed • Bounce quarantine & Fernet encryption active',
+    badge: 'MX OK',
+    status: 'SECURED'
+  },
+  RADAR: {
+    outputLabel: 'Per-User Autopilot Queue',
+    detail: 'HR timezone-aware personalized draft queued in isolated workspace',
+    badge: '24/7 LOOP',
+    status: 'QUEUED'
+  }
 };
 
 const MINI_TRACKS = [
@@ -102,8 +122,8 @@ export const BrioShowcase: React.FC<BrioShowcaseProps> = ({ onOpenBrioModal }) =
   const [brioState, setBrioState] = useState<BrioState>('idle');
   const [autoCycle, setAutoCycle] = useState(true);
 
-  // Secondary Mini-Widget 1: Sign Sync
-  const [selectedSign, setSelectedSign] = useState<string>('HELLO');
+  // Secondary Mini-Widget 1: PingHR
+  const [selectedPingMode, setSelectedPingMode] = useState<string>('MATCH');
 
   // Secondary Mini-Widget 2: Spotify Live Translator
   const [trackIdx, setTrackIdx] = useState(0);
@@ -404,52 +424,56 @@ export const BrioShowcase: React.FC<BrioShowcaseProps> = ({ onOpenBrioModal }) =
       </div>
 
       {/* ===================================================================
-          SECONDARY MINIATURE WIDGETS (SIGN SYNC & SPOTIFY TRANSLATOR)
+          SECONDARY MINIATURE WIDGETS (PINGHR & SPOTIFY TRANSLATOR)
          =================================================================== */}
       <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
-        {/* Mini-Widget 1: Sign Sync Live Translator Preview */}
+        {/* Mini-Widget 1: PingHR Job Discovery & Outreach Preview */}
         <div className="spotlight-card p-5 sm:p-6 space-y-4">
           <div className="flex items-center justify-between border-b border-white/10 pb-3">
             <div className="flex items-center gap-2">
               <div className="p-2 rounded-xl bg-emerald-500/15 text-emerald-400 border border-emerald-500/30">
-                <HandMetal className="w-4 h-4" />
+                <Briefcase className="w-4 h-4" />
               </div>
               <div>
-                <div className="font-mono font-bold text-sm text-white">Sign Sync Mini-Translator</div>
-                <div className="text-[10px] font-mono text-emerald-400">TensorFlow • LSTM • MediaPipe • Flutter 3D</div>
+                <div className="font-mono font-bold text-sm text-white">PingHR Job &amp; Outreach Radar</div>
+                <div className="text-[10px] font-mono text-emerald-400">FastAPI • SQLAlchemy • React • ATS</div>
               </div>
             </div>
             <span className="text-[10px] font-mono px-2 py-0.5 rounded-full bg-emerald-500/15 text-emerald-300 border border-emerald-500/30">
-              {MINI_SIGNS[selectedSign].conf}
+              {PINGHR_MODES[selectedPingMode].badge}
             </span>
           </div>
 
           <div className="flex flex-wrap gap-1.5">
-            {Object.keys(MINI_SIGNS).map((word) => (
+            {Object.keys(PINGHR_MODES).map((modeKey) => (
               <button
-                key={word}
+                key={modeKey}
                 type="button"
                 onClick={() => {
                   playSound('click');
-                  setSelectedSign(word);
+                  setSelectedPingMode(modeKey);
                 }}
                 className={`px-3 py-1 rounded-lg text-[11px] font-mono border transition-colors ${
-                  selectedSign === word
+                  selectedPingMode === modeKey
                     ? 'bg-emerald-500/20 border-emerald-400 text-emerald-200 font-bold'
                     : 'bg-white/[0.03] border-white/10 text-slate-400 hover:text-white'
                 }`}
               >
-                {word}
+                {modeKey}
               </button>
             ))}
           </div>
 
           <div className="p-3.5 rounded-xl bg-[#050811] border border-white/10 flex items-center justify-between gap-3">
             <div className="space-y-0.5">
-              <div className="text-[10px] font-mono uppercase text-slate-500">3D Avatar Gesture Output</div>
-              <div className="text-xs font-medium text-slate-200">{MINI_SIGNS[selectedSign].pose}</div>
+              <div className="text-[10px] font-mono uppercase text-slate-500">
+                {PINGHR_MODES[selectedPingMode].outputLabel}
+              </div>
+              <div className="text-xs font-medium text-slate-200">{PINGHR_MODES[selectedPingMode].detail}</div>
             </div>
-            <span className="text-xs font-mono font-bold text-emerald-400 shrink-0">"{selectedSign}"</span>
+            <span className="text-xs font-mono font-bold text-emerald-400 shrink-0">
+              {PINGHR_MODES[selectedPingMode].status}
+            </span>
           </div>
         </div>
 

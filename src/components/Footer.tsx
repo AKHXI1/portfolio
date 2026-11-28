@@ -1,14 +1,10 @@
 import React from 'react';
-import { ArrowUp, Terminal } from 'lucide-react';
+import { ArrowUp } from 'lucide-react';
 import { playSound } from '../utils/sound';
 import { PERSONAL_INFO } from '../data/portfolioData';
 import { usePortfolioMode } from '../context/ModeContext';
 
-interface FooterProps {
-  onOpenTerminal: () => void;
-}
-
-export const Footer: React.FC<FooterProps> = ({ onOpenTerminal }) => {
+export const Footer: React.FC = () => {
   const { isDev } = usePortfolioMode();
 
   const scrollToTop = () => {
@@ -49,9 +45,6 @@ export const Footer: React.FC<FooterProps> = ({ onOpenTerminal }) => {
               {PERSONAL_INFO.handle}
             </span>
           </div>
-          <p className={`text-xs max-w-sm ${isDev ? 'text-slate-400' : 'text-zinc-600'}`}>
-            {PERSONAL_INFO.institution} • {PERSONAL_INFO.degree}
-          </p>
         </div>
 
         <div className={`flex flex-wrap items-center justify-center gap-6 text-xs font-medium ${isDev ? 'text-slate-400' : 'text-zinc-600'}`}>
@@ -82,24 +75,11 @@ export const Footer: React.FC<FooterProps> = ({ onOpenTerminal }) => {
           >
             WhatsApp
           </a>
-          <button
-            onClick={() => {
-              playSound('terminal');
-              onOpenTerminal();
-            }}
-            className={`font-mono transition-colors flex items-center gap-1 ${
-              isDev ? 'text-slate-300 hover:text-cyan-400' : 'text-zinc-800 hover:text-[#ff5c4d]'
-            }`}
-          >
-            <Terminal className="w-3.5 h-3.5" />
-            CLI
-          </button>
         </div>
 
         <div className="flex items-center gap-4">
           <div className={`text-xs font-mono text-center md:text-right ${isDev ? 'text-slate-500' : 'text-zinc-500'}`}>
             <div>© {new Date().getFullYear()} Akhil Sabu. All rights reserved.</div>
-            <div className="text-[11px] opacity-75">Built with React, Framer Motion &amp; Tailwind</div>
           </div>
 
           <button

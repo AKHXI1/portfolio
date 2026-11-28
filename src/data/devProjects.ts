@@ -55,6 +55,50 @@ export const devProjects: DevProject[] = [
     ]
   },
   {
+    id: 'pinghr',
+    title: 'PingHR — AI Job Discovery & Outreach',
+    summary: 'Multi-user AI job discovery, ATS resume checker, and automated outreach platform.',
+    primaryTags: ['FastAPI', 'React', 'SQLAlchemy'],
+    fullTechStack: ['Python', 'FastAPI', 'React', 'Vite', 'SQLAlchemy', 'PostgreSQL', 'SQLite', 'Fernet Encryption', 'Docker'],
+    badge: 'Full-Stack AI Platform',
+    githubUrl: 'https://github.com/AKHXI1/PingHR',
+    liveUrl: undefined,
+    overview: {
+      whatItDoes:
+        'A multi-user web platform built with FastAPI, SQLAlchemy, and React/Vite where users can sign up, upload resumes, link GitHub profiles, store encrypted SMTP/AI keys, and run personalized job matching and outreach in isolated workspaces.',
+      problemSolved:
+        'Manual job hunting across dozens of job boards, auditing resumes for ATS parseability, and managing cold HR outreach without exposing credentials or hitting bounce issues is slow and fragmented.',
+      whatIBuilt: [
+        'Multi-user authentication with scrypt password hashing, HTTP-only session cookies, and Fernet-encrypted storage for per-user SMTP and Gemini/Claude/Adzuna API keys.',
+        'Live job scraping pipeline across 20 global job boards and MNC portals (Workday, Greenhouse, Lever, Infopark, Technopark, Remotive, Adzuna, and more) with dynamic per-user skill and GitHub matching.',
+        'Built-in Resume ATS-Friendly Checker for PDF/DOCX parseability, JD keyword gap analysis, and 24/7 autopilot outreach with DNS MX checks and bounce quarantine.'
+      ]
+    },
+    architecture: [
+      'FastAPI Async Backend & SQLAlchemy ORM (SQLite WAL / PostgreSQL)',
+      'React + Vite Frontend with Multi-User Isolated Workspaces',
+      'Fernet Encrypted Credential Vault & scrypt Session Auth',
+      '20-Source Job Scraper, ATS Analyzer & Deliverability Guard'
+    ],
+    screenshots: [
+      {
+        title: 'Multi-Source Job Discovery & Match Scoring',
+        caption: 'Shared job catalog scraped from 20 global boards and Kerala tech parks, scored dynamically against your resume and GitHub.',
+        accent: 'from-cyan-500/25 via-sky-500/15 to-slate-900'
+      },
+      {
+        title: 'Resume ATS-Friendly Checker & Gap Analysis',
+        caption: 'Structural PDF/DOCX parseability audit, impact checks, and job-description keyword gap analyzer.',
+        accent: 'from-emerald-500/25 via-cyan-500/15 to-slate-900'
+      },
+      {
+        title: 'Per-User Autopilot & Deliverability Guard',
+        caption: 'Encrypted SMTP/AI key vault with DNS MX verification, bounce quarantine, and HR timezone radar.',
+        accent: 'from-indigo-500/25 via-cyan-500/15 to-slate-900'
+      }
+    ]
+  },
+  {
     id: 'sign-sync',
     title: 'Sign Sync',
     summary: 'Bidirectional AI sign language translator pairing LSTM vision with a 3D Flutter avatar.',
